@@ -41,7 +41,7 @@ public class MyDemo {
 	    KieContainer kContainer = ks.getKieClasspathContainer();
     	KieSession kSession = kContainer.newKieSession("ksession-rules");
     	Ball ball = new Ball();
-    	ball.a = 0;
+    	ball.a = 0;   
     	ball.b = 0;
     	ball.c = 1;
     	kSession.insert(ball);
