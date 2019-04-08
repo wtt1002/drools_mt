@@ -11,7 +11,7 @@ global java.util.List<String> highList;
 global java.util.List<String> midList;
 
 function void highRiskPlan(){
-	System.out.println("ÎªÉ¶ÍõæÃæÃnnn");
+	System.out.println("ÎªÉ¶ÍõæÃæÃ");
 	//$patient : Patient();
 	//System.out.println($patient.getName());
 }
