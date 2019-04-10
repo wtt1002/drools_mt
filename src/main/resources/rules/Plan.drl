@@ -1,0 +1,267 @@
+package com.sample
+
+import java.util.ArrayList;
+import com.sample.DroolsTest.Message;
+import entity.Patient;
+import entity.Assessment;
+import entity.OtherTest;
+import entity.AccessProblem;
+import entity.NoninvasiveCardiac;
+import entity.ExerciseCardiopulmonary;
+import entity.ExercisePlan;
+global java.util.List<String> highList;
+global java.util.List<String> midList;
+
+function void highRiskPlan2(){
+	System.out.println("为啥王婷婷");
+	//$patient : Patient();
+	//System.out.println($patient.getName());
+}
+
+/**
+*心电图
+*心律失常
+*再血管后并发症
+*心理障碍
+*左心室射血分数
+*功能储备
+*血肌钙蛋白浓度
+*/
+
+/**
+	1------------------------------------------------运动强度------------------------------------------------1
+*/
+//  1.1-------------------------心率储备法-------------------------1.1
+rule "AerobicStrengh1-h"
+	activation-group "exerciseStrength"
+	salience 0
+	when
+		Patient(riskRank == Patient.HIGHRISK)
+		and
+		$exerciseData : ExerciseCardiopulmonary(peaceRate > 1.0 && peakRate > 1.0)
+		and
+		$exercisePlan : ExercisePlan()
+	then
+		System.out.println("6...有运动心肺功能检测=================================");
+		int rateStart = (int)(($exerciseData.getPeakRate() - $exerciseData.getPeaceRate())*0.5+$exerciseData.getPeaceRate());
+		int rateEnd = (int)(($exerciseData.getPeakRate() - $exerciseData.getPeaceRate())*0.6+$exerciseData.getPeaceRate());
+		$exercisePlan.setStrength((rateStart+rateEnd)/2);
+		$exercisePlan.setStrengthStart(rateStart);
+		$exercisePlan.setStrengthEnd(rateEnd);
+		System.out.println("6...有运动心肺功能检测=================================" + rateStart);
+end
+rule "AerobicStrengh1-m"
+	activation-group "exerciseStrength"
+	salience 0
+	when
+		Patient(riskRank == Patient.MIDRISK)
+		and
+		$exerciseData : ExerciseCardiopulmonary(peaceRate > 1.0 && peakRate > 1.0)
+		and
+		$exercisePlan : ExercisePlan()
+	then
+		System.out.println("6...有运动心肺功能检测=================================");
+		int rateStart = (int)(($exerciseData.getPeakRate() - $exerciseData.getPeaceRate())*0.6+$exerciseData.getPeaceRate());
+		int rateEnd = (int)(($exerciseData.getPeakRate() - $exerciseData.getPeaceRate())*0.7+$exerciseData.getPeaceRate());
+		$exercisePlan.setStrength((rateStart+rateEnd)/2);
+		$exercisePlan.setStrengthStart(rateStart);
+		$exercisePlan.setStrengthEnd(rateEnd);
+		System.out.println("6...有运动心肺功能检测=================================" + rateStart);
+end
+
+rule "AerobicStrengh1-l"
+	activation-group "exerciseStrength"
+	salience 0
+	when
+		Patient(riskRank == Patient.LOWRISK)
+		and
+		$exerciseData : ExerciseCardiopulmonary(peaceRate > 1.0 && peakRate > 1.0)
+		and
+		$exercisePlan : ExercisePlan()
+	then
+		System.out.println("6...有运动心肺功能检测=================================");
+		double rateStart = ($exerciseData.getPeakRate() - $exerciseData.getPeaceRate())*0.7+$exerciseData.getPeaceRate();
+		double rateEnd = ($exerciseData.getPeakRate() - $exerciseData.getPeaceRate())*0.8+$exerciseData.getPeaceRate();
+		$exercisePlan.setStrength((rateStart+rateEnd)/2);
+		$exercisePlan.setStrengthStart(rateStart);
+		$exercisePlan.setStrengthEnd(rateEnd);
+		System.out.println("6...有运动心肺功能检测=================================" + rateStart);
+end
+
+//  1.2-------------------------无氧阈法-------------------------1.2
+
+rule "AerobicStrengh2"
+	activation-group "exerciseStrength"
+	salience -1
+	when
+		Patient()
+		and
+		$exerciseData : ExerciseCardiopulmonary(vo2Max > 1.0)
+		and
+		$exercisePlan : ExercisePlan()
+	then
+		System.out.println("6...有运动心肺功能检测=================================");
+		double strength = $exerciseData.getVo2Max()*0.6;
+		$exercisePlan.setStrenghVo2(strength);
+		System.out.println("6...有运动心肺功能检测=================================" + strength);
+end
+
+//  1.3-------------------------目标心率法-------------------------1.3
+
+rule "AerobicStrengh3-h"
+	activation-group "exerciseStrength"
+	salience -2
+	when
+		Patient(riskRank == Patient.HIGHRISK)
+		and
+		$cardiacData : NoninvasiveCardiac(hr > 1)
+		and
+		$exercisePlan : ExercisePlan()
+	then
+		System.out.println("6...有运动心肺功能检测=================================");
+		double heartRate = $cardiacData.getHr()+20;
+		$exercisePlan.setStrength(heartRate);
+		//$exercisePlan.setStrengthStart(heartRate);
+		//$exercisePlan.setStrengthEnd(heartRate);
+		System.out.println("6...有运动心肺功能检测=================================" + heartRate);
+end
+
+rule "AerobicStrengh3-ml"
+	activation-group "exerciseStrength"
+	salience -2
+	when
+		Patient(riskRank == Patient.LOWRISK || riskRank == Patient.MIDRISK)
+		and
+		$cardiacData : NoninvasiveCardiac(hr > 1)
+		and
+		$exercisePlan : ExercisePlan()
+	then
+		System.out.println("6...有运动心肺功能检测=================================");
+		double heartRate = $cardiacData.getHr()+30;
+		$exercisePlan.setStrength(heartRate);
+		//$exercisePlan.setStrengthStart(heartRate);
+		//$exercisePlan.setStrengthEnd(heartRate);
+		System.out.println("6...有运动心肺功能检测=================================" + heartRate);
+end
+
+/**
+	2------------------------------------------------运动时长------------------------------------------------2
+*/
+
+//  1.3-------------------------普通冠心病患者-------------------------1.3
+rule "AerobicDuration1-h"
+	activation-group "exerciseDuration"
+	salience 0
+	when
+		Patient(patientType == Patient.ORDINARY_PATIENT && riskRank == Patient.HIGHRISK)
+		and
+		$exercisePlan : ExercisePlan()
+	then
+		System.out.println("6...有运动心肺功能检测=================================");
+		$exercisePlan.setDurationStart(30);
+		$exercisePlan.setDurationEnd(40);
+		//$exercisePlan.setStrengthStart(heartRate);
+		//$exercisePlan.setStrengthEnd(heartRate);
+		System.out.println("6...有运动心肺功能检测=================================" + 3040+"min");
+end
+
+rule "AerobicDuration1-ml"
+	activation-group "exerciseDuration"
+	salience 0
+	when
+		Patient(patientType == Patient.ORDINARY_PATIENT && (riskRank == Patient.MIDRISK || riskRank == Patient.LOWRISK))
+		and
+		$exercisePlan : ExercisePlan()
+	then
+		System.out.println("6...有运动心肺功能检测=================================");
+		$exercisePlan.setDurationStart(20);
+		$exercisePlan.setDurationEnd(30);
+		//$exercisePlan.setStrengthStart(heartRate);
+		//$exercisePlan.setStrengthEnd(heartRate);
+		System.out.println("6...有运动心肺功能检测=================================" + 2030+"min");
+end
+
+//  1.3-------------------------PCI冠心病患者-------------------------1.3
+rule "AerobicDuration2-hm"
+	activation-group "exerciseDuration"
+	salience 0
+	when
+		Patient(patientType == Patient.PCI_PATIENT && (riskRank == Patient.HIGHRISK || riskRank == Patient.MIDRISK))
+		and
+		$exercisePlan : ExercisePlan()
+	then
+		System.out.println("6...有运动心肺功能检测=================================");
+		$exercisePlan.setDurationStart(15);
+		$exercisePlan.setDurationEnd(30);
+		//$exercisePlan.setStrengthStart(heartRate);
+		//$exercisePlan.setStrengthEnd(heartRate);
+		System.out.println("6...有运动心肺功能检测=================================" + 1530+"min");
+end
+
+rule "AerobicDuration2-l"
+	activation-group "exerciseDuration"
+	salience 0
+	when
+		Patient(patientType == Patient.PCI_PATIENT && riskRank == Patient.LOWRISK)
+		and
+		$exercisePlan : ExercisePlan()
+	then
+		System.out.println("6...有运动心肺功能检测=================================");
+		$exercisePlan.setDurationStart(5);
+		$exercisePlan.setDurationEnd(10);
+		//$exercisePlan.setStrengthStart(heartRate);
+		//$exercisePlan.setStrengthEnd(heartRate);
+		System.out.println("6...有运动心肺功能检测=================================" + 510+"min");
+end
+//  1.3-------------------------高龄冠心病患者-------------------------1.3
+rule "AerobicDuration3-h"
+	activation-group "exerciseDuration"
+	salience 0
+	when
+		Patient(patientType == Patient.OLD_PATIENT && riskRank == Patient.HIGHRISK)
+		and
+		$exercisePlan : ExercisePlan()
+	then
+		System.out.println("6...有运动心肺功能检测=================================");
+		$exercisePlan.setDurationStart(5);
+		$exercisePlan.setDurationEnd(30);
+		//$exercisePlan.setStrengthStart(heartRate);
+		//$exercisePlan.setStrengthEnd(heartRate);
+		System.out.println("6...有运动心肺功能检测=================================" + 530 +"min");
+end
+
+rule "AerobicDuration3-ml"
+	activation-group "exerciseDuration"
+	salience 0
+	when
+		Patient(patientType == Patient.OLD_PATIENT && (riskRank == Patient.MIDRISK || riskRank == Patient.LOWRISK))
+		and
+		$exercisePlan : ExercisePlan()
+	then
+		System.out.println("6...有运动心肺功能检测=================================");
+		$exercisePlan.setDurationStart(15);
+		$exercisePlan.setDurationEnd(30);
+		//$exercisePlan.setStrengthStart(heartRate);
+		//$exercisePlan.setStrengthEnd(heartRate);
+		System.out.println("6...有运动心肺功能检测=================================" + 1530 +"min");
+end
+
+/**
+	1------------------------------------------------运动频率------------------------------------------------1
+*/
+//  1.1-------------------------普通冠心病患者-------------------------1.1
+rule "AerobicTimes1-hml"
+	activation-group "exerciseTimes"
+	salience 0
+	when
+		Patient(patientType == Patient.ORDINARY_PATIENT)
+		and
+		$exercisePlan : ExercisePlan()
+	then
+		System.out.println("6...有运动心肺功能检测=================================");
+		$exercisePlan.setTimesStart(3);
+		$exercisePlan.setTimesEnd(5);
+		//$exercisePlan.setStrengthStart(heartRate);
+		//$exercisePlan.setStrengthEnd(heartRate);
+		System.out.println("6...有运动心肺功能检测=================================" + 35 +"次");
+end
