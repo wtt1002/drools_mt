@@ -5,7 +5,7 @@ import entity.Patient;
 import entity.Ball;
 global java.util.List myInfo;
  
-
+/*
 rule "gender11"
 	activation-group "ball"
 	lock-on-active
@@ -27,8 +27,9 @@ rule "gender12"
         $ball : Ball(b==0)
     then
         System.out.println( "b==0" );
-        $ball.b=9;
-        System.out.println($ball.b);
+        $ball.list.add("ÍÛ°¡°¡");
+        //$ball.b=9;
+        //System.out.println($ball.b);
         update($ball);
 end
 
@@ -62,9 +63,19 @@ rule "wtt2"
 end
 
 rule "wt32"
+	activation-group "ball2"
 	salience -2
 	when 
-		Ball(b==9)
+		Ball(list.size == 0)
 	then
-		System.out.println("wwwwwwwwwwww");
+		System.out.println("wwwwwwwwwwww==");
 end
+rule "wt322"
+	activation-group "ball2"
+	salience -2
+	when 
+		Ball(list.size >= 1)
+	then
+		System.out.println("wwwwwwwwwwww>=");
+end
+*/

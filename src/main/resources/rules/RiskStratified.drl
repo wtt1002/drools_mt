@@ -31,27 +31,28 @@ function void highRiskPlan(){
 */
 rule "lowHeartMap"
 	activation-group "heartMap"
-	lock-on-active
+	//lock-on-active
 	no-loop
 	salience 6
     when
-        $patient : Patient(patientType == Patient.ORDINARY_PATIENT)
+        $patient : Patient(patientType == Patient.ORDINARY_PATIENT && lowList not contains "恢复期未出现心绞痛和心电图缺血改变")
         and
         (OtherTest(angina == OtherTest.NO_OCCER) and OtherTest(ischemia == OtherTest.NO_OCCER))
     then
     	//$patient.setPatientType(Patient.OLD_PATIENT);
         System.out.println( "心电图结论-低危患者");
+        $patient.getLowList().add("恢复期未出现心绞痛和心电图缺血改变");
         System.out.println("6...顺序测试...5");
         update($patient);
 end
 
 rule "midHeartMap"
 	activation-group "heartMap"
-	lock-on-active
+	//lock-on-active
 	no-loop
 	salience 4
     when
-        $patient : Patient(patientType == Patient.ORDINARY_PATIENT)
+        $patient : Patient(patientType == Patient.ORDINARY_PATIENT && midList not contains "恢复期出现心绞痛或心电图缺血改变")
         and
         (OtherTest(angina == OtherTest.OCCER) or OtherTest(ischemia == OtherTest.OCCER))
     then
@@ -65,13 +66,13 @@ end
 
 rule "HighHeartMap"
 	activation-group "heartMap"
-	lock-on-active
+	//lock-on-active
 	no-loop
 	salience 5
     when
-        $patient : Patient(patientType == Patient.ORDINARY_PATIENT)
+        $patient : Patient(patientType == Patient.ORDINARY_PATIENT && highList not contains "恢复期出现心绞痛和心电图缺血改变")
         and
-        (OtherTest(angina == OtherTest.OCCER) or OtherTest(ischemia == OtherTest.OCCER))
+        (OtherTest(angina == OtherTest.OCCER) and OtherTest(ischemia == OtherTest.OCCER))
     then
     	//$patient.setPatientType(Patient.OLD_PATIENT);
         System.out.println( "心电图结论-高危患者");
@@ -85,16 +86,16 @@ end
 	2----------------检查是否有心率不齐----------------2
 */
 rule "isArrhythmia"
-	lock-on-active
+	//lock-on-active
 	no-loop
 	salience 6
     when
-        $patient : Patient(patientType == Patient.ORDINARY_PATIENT)
+        $patient : Patient(patientType == Patient.ORDINARY_PATIENT && highList not contains "运动出现心律失常")
         and
         OtherTest(isArrhythmia == OtherTest.OCCER)
     then
     	//$patient.setPatientType(Patient.OLD_PATIENT);
-        System.out.println( "出现心律失常");
+        System.out.println( "运动出现心律失常");
         $patient.getHighList().add("运动出现心律失常");
         $patient.setRiskRank(Patient.HIGHRISK);
         //highList.add("运动出现心律失常");
@@ -103,33 +104,34 @@ rule "isArrhythmia"
 end
 
 /**
-	3----------------再血管化后并发症----------------3
+	3----------------再血管化后并发症----------------3  problem
 */
 rule "lowAccessProblem"
 	activation-group "accessProblem"
-	lock-on-active
+	//lock-on-active
 	no-loop
 	salience 4
     when
-        $patient : Patient(patientType == Patient.ORDINARY_PATIENT)
+        $patient : Patient(patientType == Patient.ORDINARY_PATIENT && lowList not contains "AMI溶栓血管再通，PCI或CABG后血管再通且无合并症")
         and
         (AccessProblem(vascularObstruction == OtherTest.NO_OCCER) and AccessProblem(shock == OtherTest.NO_OCCER))
     then
     	//$patient.setPatientType(Patient.OLD_PATIENT);
         System.out.println( "并发症-低危患者");
+        $patient.getLowList().add("AMI溶栓血管再通，PCI或CABG后血管再通且无合并症");
         System.out.println("4...顺序测试...8");
         update($patient);
 end
 
 rule "midAccessProblem"
 	activation-group "accessProblem"
-	lock-on-active
+	//lock-on-active
 	no-loop
 	salience 5
     when
-        $patient : Patient(patientType == Patient.ORDINARY_PATIENT)
+        $patient : Patient(patientType == Patient.ORDINARY_PATIENT && midList not contains "血管阻塞且无合并心原性休克或心力衰竭")
         and
-        (AccessProblem(heartFailure == OtherTest.NO_OCCER) and AccessProblem(shock == OtherTest.NO_OCCER))
+        AccessProblem(heartFailure == OtherTest.NO_OCCER && shock == OtherTest.NO_OCCER && vascularObstruction == OtherTest.OCCER)
     then
     	//$patient.setPatientType(Patient.OLD_PATIENT);
         System.out.println( "并发症-中危患者");
@@ -141,11 +143,11 @@ end
 
 rule "highAccessProblem"
 	activation-group "accessProblem"
-	lock-on-active
+	//lock-on-active
 	no-loop
 	salience 6
     when
-        $patient : Patient(patientType == Patient.ORDINARY_PATIENT)
+        $patient : Patient(patientType == Patient.ORDINARY_PATIENT && highList not contains "出现合并心原性休克或心力衰竭")
         and
         (AccessProblem(heartFailure == OtherTest.OCCER) or AccessProblem(shock == OtherTest.OCCER))
     then
@@ -161,27 +163,28 @@ end
 */
 rule "lowAnger"
 	activation-group "anger"
-	lock-on-active
+	//lock-on-active
 	no-loop
 	salience 6
     when
-        $patient : Patient(patientType == Patient.ORDINARY_PATIENT)
+        $patient : Patient(patientType == Patient.ORDINARY_PATIENT && lowList not contains "无心理障碍")
         and
         (Assessment(sasScore < 50) and Assessment(sdsScore < 53))
     then
     	//$patient.setPatientType(Patient.OLD_PATIENT);
         System.out.println( "心理障碍-低危患者");
+        $patient.getLowList().add("无心理障碍");
         System.out.println("6...顺序测试...1");
         update($patient);
 end
 
 rule "midAnger"
 	activation-group "anger"
-	lock-on-active
+	//lock-on-active
 	no-loop
 	salience 4
     when
-        $patient : Patient(patientType == Patient.ORDINARY_PATIENT)
+        $patient : Patient(patientType == Patient.ORDINARY_PATIENT && midList not contains "无严重心理障碍")
         and
         (Assessment(sasScore >=50 && sasScore <= 70) or Assessment(sdsScore >=53 && sdsScore <= 72))
     then
@@ -195,11 +198,11 @@ end
 
 rule "highAnger"
 	activation-group "anger"
-	lock-on-active
+	//lock-on-active
 	no-loop
 	salience 5
     when
-        $patient : Patient(patientType == Patient.ORDINARY_PATIENT)
+        $patient : Patient(patientType == Patient.ORDINARY_PATIENT && highList not contains "严重心理障碍")
         and
         (Assessment(sasScore > 70) or Assessment(sdsScore >72))
     then
@@ -216,33 +219,34 @@ end
 */
 rule "lowEf"
 	activation-group "ef"
-	lock-on-active
+	//lock-on-active
 	no-loop
 	salience 4
     when
-        $patient : Patient(patientType == Patient.ORDINARY_PATIENT)
+        $patient : Patient(patientType == Patient.ORDINARY_PATIENT && lowList not contains "左心室射血分数>=50%")
         and
         NoninvasiveCardiac(ef >= 50)
     then
     	//$patient.setPatientType(Patient.OLD_PATIENT);
         System.out.println( "射血分数-低危患者");
+        $patient.getLowList().add("左心室射血分数>=50%");
         System.out.println("4...顺序测试...14");
         update($patient);
 end
 
 rule "midEf"
 	activation-group "ef"
-	lock-on-active
+	//lock-on-active
 	no-loop
 	salience 5
     when
-        $patient : Patient(patientType == Patient.ORDINARY_PATIENT)
+        $patient : Patient(patientType == Patient.ORDINARY_PATIENT  && midList not contains "左心室射血分数 40%~49%")
         and
         NoninvasiveCardiac(ef <= 49 && ef >= 40)
     then
     	//$patient.setPatientType(Patient.OLD_PATIENT);
         System.out.println( "射血分数-中危患者");
-        $patient.getMidList().add("左心室射血分数 40%~49% ");
+        $patient.getMidList().add("左心室射血分数 40%~49%");
         //midList.add("无严重心理障碍");
         System.out.println("5...顺序测试...15");
         update($patient);
@@ -250,17 +254,17 @@ end
 
 rule "highEf"
 	activation-group "ef"
-	lock-on-active
+	//lock-on-active
 	no-loop
 	salience 6
     when
-        $patient : Patient(patientType == Patient.ORDINARY_PATIENT)
+        $patient : Patient(patientType == Patient.ORDINARY_PATIENT && highList not contains "左心室射血分数<=40%")
         and
         NoninvasiveCardiac(ef < 40)
     then
     	//$patient.setPatientType(Patient.OLD_PATIENT);
         System.out.println( "射血分数-高危患者");
-        $patient.getHighList().add("左心室射血分数<40% ");
+        $patient.getHighList().add("左心室射血分数<=40%");
         //highList.add("左心室射血分数<40%");
         System.out.println("6...顺序测试...16");
         update($patient);
@@ -275,12 +279,13 @@ rule "lowExerciseEquival"
 	no-loop
 	salience 4
     when
-        $patient : Patient(patientType == Patient.ORDINARY_PATIENT)
+        $patient : Patient(patientType == Patient.ORDINARY_PATIENT && lowList not contains "运动水平高")
         and
         OtherTest(exerciseEquival >= 7.0)
     then
     	//$patient.setPatientType(Patient.OLD_PATIENT);
         System.out.println( "运动当量-低危患者");
+        $patient.getLowList().add("运动水平低");
         System.out.println("4...顺序测试...11");
         update($patient);
 end
@@ -291,13 +296,13 @@ rule "midExerciseEquival"
 	no-loop
 	salience 5
     when
-        $patient : Patient(patientType == Patient.ORDINARY_PATIENT)
+        $patient : Patient(patientType == Patient.ORDINARY_PATIENT && midList not contains "运动水平中等")
         and
         OtherTest(exerciseEquival > 5.0 && exerciseEquival <7.0)
     then
     	//$patient.setPatientType(Patient.OLD_PATIENT);
         System.out.println( "运动当量-中危患者");
-        $patient.getMidList().add("中度运动");
+        $patient.getMidList().add("运动水平中等");
         //midList.add("中度运动");
         System.out.println("5...顺序测试...12");
         update($patient);
@@ -309,73 +314,73 @@ rule "highExerciseEquival"
 	no-loop
 	salience 6
     when
-        $patient : Patient(patientType == Patient.ORDINARY_PATIENT)
+        $patient : Patient(patientType == Patient.ORDINARY_PATIENT && highList not contains "运动水平低")
         and
         OtherTest(exerciseEquival <= 5.0)
     then
     	//$patient.setPatientType(Patient.OLD_PATIENT);
-        System.out.println( "运动当量-高危患者");
-        $patient.getHighList().add("低水平运动");
+        System.out.println( "运动当量-运动水平低");
+        $patient.getHighList().add("运动水平低");
         //highList.add("低水平运动");
         System.out.println("6...顺序测试...13..."+highList.size()+"..."+$patient.getHighList().size());
         update($patient);
 end
 
+
+
 /**
 	7----------------血肌钙蛋白浓度----------------7
 */
+
+
 
 /**
 	处理
 */
 rule "highDeal"
 	activation-group "wtt"
-	lock-on-active
+	//lock-on-active
 	no-loop
 	salience 3
 	when
-		$patient : Patient(midList.size > 0)
+		$patient : Patient(highList.size > 0 && riskRank != Patient.HIGHRISK && patientType == Patient.ORDINARY_PATIENT)
 	then
-		System.out.println("高危处理。。。。。。"+$patient.getMidList().size());
+		$patient.setRiskRank(Patient.HIGHRISK);
+		System.out.println("普通冠心病患者高危处理。。。。。。"+$patient.getHighList().size());
+		update($patient);
+		
 end
 
 rule "midDeal"
 	activation-group "wtt"
-	lock-on-active
+	//lock-on-active
 	no-loop
 	salience 2
 	when
-		Patient(highList.size > 0)
+		$patient:Patient(highList.size == 0 && midList.size > 0 && riskRank != Patient.MIDRISK && patientType == Patient.ORDINARY_PATIENT)
 	then
-		System.out.println("中危处理。。。。。。");
+		$patient.setRiskRank(Patient.MIDRISK);
+		update($patient);
+		System.out.println("普通冠心病患者中危处理。。。。。。");
 end
 
 rule "lowDeal"
 	activation-group "wtt"
-	lock-on-active
+	//lock-on-active
 	no-loop
 	salience 1
 	when
-		Patient(highList.size == 0)
+		$patient : Patient(highList.size == 0 && midList.size == 0 && riskRank != Patient.LOWRISK && patientType == Patient.ORDINARY_PATIENT)
 	then
-		System.out.println("低危处理。。。。。");
-end
-
-rule "lowDeal9"
-	activation-group "wtt"
-	lock-on-active
-	no-loop
-	salience 0
-	when
-		eval(true)
-	then
-		System.out.println("我不知道自己该什么时候出来。。。。。。。。。。。。");
+		$patient.setRiskRank(Patient.LOWRISK);
+		System.out.println("普通冠心病患者低危处理。。。。。" + $patient.getPatientType());
+		update($patient);
 end
 
 rule "highDealOrdinary"
 	salience 0
 	when 
-		$patient : Patient(riskRank == Patient.HIGHRISK, patientType == Patient.ORDINARY_PATIENT)
+		$patient : Patient(riskRank == Patient.HIGHRISK && patientType == Patient.ORDINARY_PATIENT)
 	then
 		System.out.println("就是我！！！"+$patient.getPatientType());
 		//highRiskPlan();
@@ -384,7 +389,7 @@ end
 rule "midDealOrdinary"
 	salience 0
 	when 
-		$patient : Patient(riskRank == Patient.MIDRISK, patientType == Patient.ORDINARY_PATIENT)
+		$patient : Patient(riskRank == Patient.MIDRISK && patientType == Patient.ORDINARY_PATIENT)
 	then
 		System.out.println("中度是我！！！"+$patient.getPatientType());
 		//highRiskPlan();
@@ -393,7 +398,7 @@ end
 rule "lowDealOrdinary"
 	salience 0
 	when 
-		$patient : Patient(riskRank == Patient.LOWRISK, patientType == Patient.ORDINARY_PATIENT)
+		$patient : Patient(riskRank == Patient.LOWRISK && patientType == Patient.ORDINARY_PATIENT)
 	then
 		System.out.println("低度是我！！！"+$patient.getPatientType());
 		//highRiskPlan();

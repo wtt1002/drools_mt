@@ -7,7 +7,7 @@ global java.util.List myInfo;
 rule "age"
 	activation-group "patient"
 	lock-on-active
-	salience 2
+	salience 10
 	no-loop
     when
         $patient : Patient(age >= 75)
@@ -20,11 +20,25 @@ end
 rule "gender"
 	activation-group "patient"
 	lock-on-active
-	salience 0
+	salience 9
 	no-loop
     when
         $patient : Patient(age < 75 && pci == 1)
     then
     	$patient.setPatientType(Patient.PCI_PATIENT);
-        System.out.println( "pci高血压患者" );
+        System.out.println( "pci冠心病患者" );
+        update( $patient );
+end
+
+rule "gender2"
+	activation-group "patient"
+	lock-on-active
+	salience 8
+	no-loop
+    when
+        $patient : Patient(age < 75 && pci == 0)
+    then
+    	$patient.setPatientType(Patient.ORDINARY_PATIENT);
+        System.out.println( "普通冠心病患者" );
+        update( $patient );
 end
