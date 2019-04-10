@@ -1,0 +1,22 @@
+package com.sample
+
+import java.util.ArrayList;
+import com.sample.DroolsTest.Message;
+import entity.Patient;
+import entity.Assessment;
+import entity.OtherTest;
+import entity.AccessProblem;
+import entity.NoninvasiveCardiac;
+global java.util.List<String> highList;
+global java.util.List<String> midList;
+
+
+/**
+*心电图
+*心律失常
+*再血管后并发症
+*心理障碍
+*左心室射血分数
+*功能储备
+*血肌钙蛋白浓度
+*/
