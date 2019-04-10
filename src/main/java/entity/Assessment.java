@@ -25,40 +25,58 @@ package entity;
 
 */
 public class Assessment {
-    private double sasScore;
-
-    private double sdsScore;
-
-    private double naScore;
-
-    private double psqiScore;
-
-    private double ipqaScore;
-
-    private double fagerstormScore;
-
-    private double leftGrip;
-
-    private double rightGrip;
-
-    private double threeMeterTest;
-
-    private double fourMeterTest;
-
-    private double standUpTest;
-
-    private double leftBalanceTest;
-
-    private double rightBalanceTest;
-
-    private double sitReach;
-
-    private double upperarmCircumference;
-
-    private double bmi;
-
-    private double tricepsSkinfoldThickness;
-
+	//焦虑自评 分
+    private double sasScore = -1;
+	//抑郁自评 分
+    private double sdsScore = -1;
+	//营养评分 分
+    private double mnaScore = -1;
+	//睡眠质量指数 分
+    private double psqiScore = -1;
+	//运动当量 分
+    private double ipqaScore = -1;
+	//烟碱依赖评估 分
+    private double fagerstormScore = -1;
+	//左手握力kg
+    private double leftGrip = -1;
+	//右手握力kg
+    private double rightGrip = -1;
+	//3m往返试验s
+    private double threeMeterTest = -1;
+	//4m往返试验s
+    private double fourMeterTest = -1;
+	//椅子站起试验s
+    private double standUpTest = -1;
+	//左平衡s
+    private double leftBalanceTest = -1;
+	//右平衡s
+    private double rightBalanceTest = -1;
+	//坐位前伸cm
+    private double sitReach = -1;
+	//上臂围
+    private double upperarmCircumference = -1;
+	//体脂比
+    private double bmi = -1;
+	//三头肌皮褶试验mm
+    private double tricepsSkinfoldThickness = -1;
+    //衰弱
+    private double frailScore = -1;
+    //跌倒风险
+    private double fallRiskScore = -1;
+    //心功能评级
+    private double nyha = -1;
+    //心绞痛分级
+    private double ccs = -1;
+    //呼吸功能
+    private double mrc = -1;
+    //认知功能
+    private double mmseScore = -1;
+    //日常生活能力评估
+    private double adlScore = -1;
+    //工具性日常生活功能评估
+    private double iadlScore = -1;
+    //老年抑郁评估
+    private double gdsScore = -1;
 	/**
 	 * @return the sasScore
 	 */
@@ -90,15 +108,15 @@ public class Assessment {
 	/**
 	 * @return the naScore
 	 */
-	public double getNaScore() {
-		return naScore;
+	public double getMnaScore() {
+		return mnaScore;
 	}
 
 	/**
 	 * @param naScore the naScore to set
 	 */
-	public void setNaScore(double naScore) {
-		this.naScore = naScore;
+	public void setMnaScore(double mnaScore) {
+		this.mnaScore = mnaScore;
 	}
 
 	/**
@@ -295,6 +313,132 @@ public class Assessment {
 	 */
 	public void setTricepsSkinfoldThickness(double tricepsSkinfoldThickness) {
 		this.tricepsSkinfoldThickness = tricepsSkinfoldThickness;
+	}
+
+	/**
+	 * @return the frailScore
+	 */
+	public double getFrailScore() {
+		return frailScore;
+	}
+
+	/**
+	 * @param frailScore the frailScore to set
+	 */
+	public void setFrailScore(double frailScore) {
+		this.frailScore = frailScore;
+	}
+
+	/**
+	 * @return the fallRiskScore
+	 */
+	public double getFallRiskScore() {
+		return fallRiskScore;
+	}
+
+	/**
+	 * @param fallRiskScore the fallRiskScore to set
+	 */
+	public void setFallRiskScore(double fallRiskScore) {
+		this.fallRiskScore = fallRiskScore;
+	}
+
+	/**
+	 * @return the nyha
+	 */
+	public double getNyha() {
+		return nyha;
+	}
+
+	/**
+	 * @param nyha the nyha to set
+	 */
+	public void setNyha(double nyha) {
+		this.nyha = nyha;
+	}
+
+	/**
+	 * @return the ccs
+	 */
+	public double getCcs() {
+		return ccs;
+	}
+
+	/**
+	 * @param ccs the ccs to set
+	 */
+	public void setCcs(double ccs) {
+		this.ccs = ccs;
+	}
+
+	/**
+	 * @return the mrc
+	 */
+	public double getMrc() {
+		return mrc;
+	}
+
+	/**
+	 * @param mrc the mrc to set
+	 */
+	public void setMrc(double mrc) {
+		this.mrc = mrc;
+	}
+
+	/**
+	 * @return the mmseScore
+	 */
+	public double getMmseScore() {
+		return mmseScore;
+	}
+
+	/**
+	 * @param mmseScore the mmseScore to set
+	 */
+	public void setMmseScore(double mmseScore) {
+		this.mmseScore = mmseScore;
+	}
+
+	/**
+	 * @return the adlScore
+	 */
+	public double getAdlScore() {
+		return adlScore;
+	}
+
+	/**
+	 * @param adlScore the adlScore to set
+	 */
+	public void setAdlScore(double adlScore) {
+		this.adlScore = adlScore;
+	}
+
+	/**
+	 * @return the iadlScore
+	 */
+	public double getIadlScore() {
+		return iadlScore;
+	}
+
+	/**
+	 * @param iadlScore the iadlScore to set
+	 */
+	public void setIadlScore(double iadlScore) {
+		this.iadlScore = iadlScore;
+	}
+
+	/**
+	 * @return the gdsScore
+	 */
+	public double getGdsScore() {
+		return gdsScore;
+	}
+
+	/**
+	 * @param gdsScore the gdsScore to set
+	 */
+	public void setGdsScore(double gdsScore) {
+		this.gdsScore = gdsScore;
 	}
     
 }

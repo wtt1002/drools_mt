@@ -25,70 +25,140 @@ package entity;
 
 */
 public class ExercisePlan {
-	private int strength;
-	private int duration;
-	private int times;
-	private int tiredStart;
-	private int tiredEnd;
+	//运动强度 心率
+	private double strength;
+	private double strengthStart;
+	private double strengthEnd;
+	//运动强度 摄氧量
+	private double strenghVo2;
+	private double durationStart;
+	private double durationEnd;
+	private double timesStart;
+	private double timesEnd;
+	private double tiredStart = 12;
+	private double tiredEnd = 16;
 	/**
 	 * @return the strength
 	 */
-	public int getStrength() {
+	public double getStrength() {
 		return strength;
 	}
 	/**
 	 * @param strength the strength to set
 	 */
-	public void setStrength(int strength) {
+	public void setStrength(double strength) {
 		this.strength = strength;
 	}
 	/**
-	 * @return the duration
+	 * @return the strengthStart
 	 */
-	public int getDuration() {
-		return duration;
+	public double getStrengthStart() {
+		return strengthStart;
 	}
 	/**
-	 * @param duration the duration to set
+	 * @param strengthStart the strengthStart to set
 	 */
-	public void setDuration(int duration) {
-		this.duration = duration;
+	public void setStrengthStart(double strengthStart) {
+		this.strengthStart = strengthStart;
 	}
 	/**
-	 * @return the times
+	 * @return the strengthEnd
 	 */
-	public int getTimes() {
-		return times;
+	public double getStrengthEnd() {
+		return strengthEnd;
 	}
 	/**
-	 * @param times the times to set
+	 * @param strengthEnd the strengthEnd to set
 	 */
-	public void setTimes(int times) {
-		this.times = times;
+	public void setStrengthEnd(double strengthEnd) {
+		this.strengthEnd = strengthEnd;
+	}
+	/**
+	 * @return the strenghVo2
+	 */
+	public double getStrenghVo2() {
+		return strenghVo2;
+	}
+	/**
+	 * @param strenghVo2 the strenghVo2 to set
+	 */
+	public void setStrenghVo2(double strenghVo2) {
+		this.strenghVo2 = strenghVo2;
+	}
+	/**
+	 * @return the durationStart
+	 */
+	public double getDurationStart() {
+		return durationStart;
+	}
+	/**
+	 * @param durationStart the durationStart to set
+	 */
+	public void setDurationStart(double durationStart) {
+		this.durationStart = durationStart;
+	}
+	/**
+	 * @return the durationEnd
+	 */
+	public double getDurationEnd() {
+		return durationEnd;
+	}
+	/**
+	 * @param durationEnd the durationEnd to set
+	 */
+	public void setDurationEnd(double durationEnd) {
+		this.durationEnd = durationEnd;
+	}
+
+	/**
+	 * @return the timesStart
+	 */
+	public double getTimesStart() {
+		return timesStart;
+	}
+	/**
+	 * @param timesStart the timesStart to set
+	 */
+	public void setTimesStart(double timesStart) {
+		this.timesStart = timesStart;
+	}
+	/**
+	 * @return the timesEnd
+	 */
+	public double getTimesEnd() {
+		return timesEnd;
+	}
+	/**
+	 * @param timesEnd the timesEnd to set
+	 */
+	public void setTimesEnd(double timesEnd) {
+		this.timesEnd = timesEnd;
 	}
 	/**
 	 * @return the tiredStart
 	 */
-	public int getTiredStart() {
+	public double getTiredStart() {
 		return tiredStart;
 	}
 	/**
 	 * @param tiredStart the tiredStart to set
 	 */
-	public void setTiredStart(int tiredStart) {
+	public void setTiredStart(double tiredStart) {
 		this.tiredStart = tiredStart;
 	}
 	/**
 	 * @return the tiredEnd
 	 */
-	public int getTiredEnd() {
+	public double getTiredEnd() {
 		return tiredEnd;
 	}
 	/**
 	 * @param tiredEnd the tiredEnd to set
 	 */
-	public void setTiredEnd(int tiredEnd) {
+	public void setTiredEnd(double tiredEnd) {
 		this.tiredEnd = tiredEnd;
 	}
+	
+	
 	
 }

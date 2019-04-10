@@ -13,6 +13,9 @@
 */  
 package entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**  
 
 * <p>Title: Ball</p>  
@@ -28,4 +31,5 @@ public class Ball {
 	public int a;
 	public int b;
 	public int c;
+	public List<String> list = new ArrayList<>();
 }

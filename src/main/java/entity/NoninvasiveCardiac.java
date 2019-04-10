@@ -25,37 +25,53 @@ package entity;
 
 */
 public class NoninvasiveCardiac {
-	private double bpm;
+	//心率
+	private double hr;
+	//每搏输出量
 	private double sv;
+	//每搏指数
 	private double svi;
+	//心输出量
 	private double co;
+	//心指数
 	private double ci;
+	//心收缩指数
 	private double cti;
+	//左心做功指数
 	private double lcwi;
+	//左心收缩时间
 	private double lvet;
+	//射血分数
 	private double ef;
+	//外周血管阻力
 	private double svr;
+	//外周血管阻力指数
 	private double svri;
+	//前负荷率
 	private double edfr;
+	//左室舒张末期容积
 	private double edv;
+	//结论
 	private String conclusion;
-	/**
-	 * @return the bpm
-	 */
-	public double getBpm() {
-		return bpm;
-	}
-	/**
-	 * @param bpm the bpm to set
-	 */
-	public void setBpm(double bpm) {
-		this.bpm = bpm;
-	}
+	//
+
 	/**
 	 * @return the sv
 	 */
 	public double getSv() {
 		return sv;
+	}
+	/**
+	 * @return the hr
+	 */
+	public double getHr() {
+		return hr;
+	}
+	/**
+	 * @param hr the hr to set
+	 */
+	public void setHr(double hr) {
+		this.hr = hr;
 	}
 	/**
 	 * @param sv the sv to set

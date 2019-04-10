@@ -49,10 +49,11 @@ public class Patient {
 	private int weight;
 	private double bmi;
 	private int pci;
-	private int patientType;
-	private int riskRank = LOWRISK;
+	private int patientType = -1;
+	private int riskRank = -1;
 	public ArrayList<String> midList = new ArrayList<>();
 	public ArrayList<String> highList = new ArrayList<>();
+	public ArrayList<String> lowList = new ArrayList<>();
 	/**
 	 * @return the name
 	 */
@@ -185,6 +186,18 @@ public class Patient {
 	 */
 	public void setRiskRank(int riskRank) {
 		this.riskRank = riskRank;
+	}
+	/**
+	 * @return the lowList
+	 */
+	public ArrayList<String> getLowList() {
+		return lowList;
+	}
+	/**
+	 * @param lowList the lowList to set
+	 */
+	public void setLowList(ArrayList<String> lowList) {
+		this.lowList = lowList;
 	}
 	
 }

@@ -25,17 +25,29 @@ package entity;
 
 */
 public class ExerciseCardiopulmonary {
+	//峰值负荷
 	private double peakLoad;
+	//峰值mets
 	private double peakMets;
+	//峰值vo2
 	private double peakVo2;
+	//最大摄氧量
 	private double vo2Max;
+	//无氧阈
 	private double at;
+	//静息心率
 	private double peaceRate;
+	//峰值心率
 	private double peakRate;
+	//靶心率
 	private double targetRate;
+	//1秒用力呼气量
 	private double efv1;
+	//fev1占预计值百分比
 	private double efv1Rate;
+	//用力呼气占用力肺活量百分比
 	private double efv1DivEvc;
+	//结论
 	private String conclusion;
 	/**
 	 * @return the peakLoad
