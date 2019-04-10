@@ -1,0 +1,596 @@
+package com.sample
+
+import java.util.ArrayList;
+import com.sample.DroolsTest.Message;
+import entity.Patient;
+import entity.Assessment;
+import entity.OtherTest;
+import entity.AccessProblem;
+import entity.NoninvasiveCardiac;
+global java.util.List<String> highList;
+global java.util.List<String> midList;
+
+/**
+*营养
+*衰弱
+*跌倒风险
+*焦虑状况
+*抑郁状况
+*心功能评级
+*心绞痛状态
+*呼吸功能
+*认知功能
+*日常生活能力评估
+*工具性日常活动功能评估
+*/
+/**
+	1----------------营养----------------1
+*/
+
+rule "yingyangH"
+	activation-group "yingyang"
+	//lock-on-active
+	no-loop
+	salience 6
+	when
+		$patient : Patient(patientType == Patient.OLD_PATIENT && highList not contains "营养不良")
+		and
+		Assessment(mnaScore <= 7.0 && mnaScore >= 0.0)
+	then 
+		$patient.getHighList().add("营养不良");
+		System.out.println("营养不良，高危");
+		update($patient);
+end
+
+rule "yingyangM"
+	activation-group "yingyang"
+	//lock-on-active
+	no-loop
+	salience 6
+	when
+		$patient : Patient(patientType == Patient.OLD_PATIENT && midList not contains "有营养不良风险")
+		and
+		Assessment(mnaScore <= 11.0 && mnaScore >= 6.0)
+	then
+		$patient.getMidList().add("有营养不良风险");
+		System.out.println("存在营养不良风险 ，中危");
+		update($patient);
+end
+
+rule "yingyangL"
+	activation-group "yingyang"
+	//lock-on-active
+	no-loop
+	salience 6
+	when
+		$patient : Patient(patientType == Patient.OLD_PATIENT && lowList not contains "正常营养状况")
+		and
+		Assessment(mnaScore >= 12.0 && mnaScore <= 14.0)
+	then
+		$patient.getLowList().add("正常营养状况");
+		System.out.println("存在营养不良风险 ，低危");
+		update($patient);
+end
+
+/**
+	2----------------衰弱----------------2
+*/
+rule "frailH"
+	activation-group "frail"
+	//lock-on-active
+	no-loop
+	salience 6
+	when
+		$patient : Patient(patientType == Patient.OLD_PATIENT && highList not contains "身体衰弱")
+		and
+		Assessment(mnaScore >= 3.0 && mnaScore <= 5.0)
+	then
+		$patient.getHighList().add("身体衰弱");
+		System.out.println("身体衰弱，高危");
+		update($patient);
+end
+
+rule "frailM"
+	activation-group "frail"
+	//lock-on-active
+	no-loop
+	salience 6
+	when
+		$patient : Patient(patientType == Patient.OLD_PATIENT && midList not contains "衰弱前期（1-2分）")
+		and
+		Assessment(mnaScore <= 2.0 && mnaScore >= 1.0)
+	then
+		$patient.getMidList().add("衰弱前期（1-2分）");
+		System.out.println("存在营养不良风险 ，中危");
+		update($patient);
+end
+
+rule "frailL"
+	activation-group "frail"
+	//lock-on-active
+	no-loop
+	salience 6
+	when
+		$patient : Patient(patientType == Patient.OLD_PATIENT && lowList not contains "身体强壮")
+		and
+		Assessment(frailScore == 0.0)
+	then 
+		$patient.getLowList().add("身体强壮");
+		System.out.println("身体强壮，低危");
+		update($patient);
+end
+
+/**
+	3----------------跌倒风险----------------3
+*/
+rule "fallRiskH"
+	activation-group "fallRisk"
+	//lock-on-active
+	no-loop
+	salience 6
+	when
+		$patient : Patient(patientType == Patient.OLD_PATIENT && highList not contains "跌倒风险高")
+		and
+		Assessment(fallRiskScore >= 10.0)
+	then
+		$patient.getHighList().add("跌倒风险高");
+		System.out.println("跌倒风险高，高危");
+		update($patient);
+end
+
+rule "fallRiskM"
+	activation-group "fallRisk"
+	//lock-on-active
+	no-loop
+	salience 6
+	when
+		$patient : Patient(patientType == Patient.OLD_PATIENT && midList not contains "跌倒风险中等")
+		and
+		Assessment(fallRiskScore <= 9.0 && fallRiskScore >= 3.0)
+	then
+		$patient.getMidList().add("跌倒风险中等");
+		System.out.println("跌倒风险中等 ，中危");
+		update($patient);
+end
+
+rule "fallRiskL"
+	activation-group "fallRisk"
+	//lock-on-active
+	no-loop
+	salience 6
+	when
+		$patient : Patient(patientType == Patient.OLD_PATIENT && lowList not contains "跌倒风险低")
+		and
+		Assessment(fallRiskScore <= 2.0 && fallRiskScore >= 1.0)
+	then 
+		$patient.getLowList().add("跌倒风险中低");
+		System.out.println("跌倒风险低，低危");
+		update($patient);
+end
+
+/**
+	4----------------焦虑状况----------------4
+*/
+rule "sasScoreH"
+	activation-group "sasScore"
+	//lock-on-active
+	no-loop
+	salience 6
+	when
+		$patient : Patient(patientType == Patient.OLD_PATIENT && highList not contains "中高度焦虑")
+		and
+		Assessment(sasScore >= 60.0)
+	then
+		$patient.getHighList().add("中高度焦虑");
+		System.out.println("中高度焦虑，高危");
+		update($patient);
+end
+
+rule "sasScoreM"
+	activation-group "sasScore"
+	//lock-on-active
+	no-loop
+	salience 6
+	when
+		$patient : Patient(patientType == Patient.OLD_PATIENT && midList not contains "轻度焦虑")
+		and
+		Assessment(sasScore <= 599.0 && sasScore >= 50.0)
+	then
+		$patient.getMidList().add("轻度焦虑");
+		System.out.println("轻度焦虑 ，中危");
+		update($patient);
+end
+
+rule "sasScoreL"
+	activation-group "sasScore"
+	//lock-on-active
+	no-loop
+	salience 6
+	when
+		$patient : Patient(patientType == Patient.OLD_PATIENT && lowList not contains "无焦虑")
+		and
+		Assessment(sasScore < 50.0)
+	then 
+		$patient.getLowList().add("无焦虑");
+		System.out.println("无焦虑，低危");
+		update($patient);
+end
+
+/**
+	5----------------抑郁状况----------------5
+*/
+rule "gdsScoreH"
+	activation-group "gdsScore"
+	//lock-on-active
+	no-loop
+	salience 6
+	when
+		$patient : Patient(patientType == Patient.OLD_PATIENT && highList not contains "中高度抑郁")
+		and
+		Assessment(gdsScore > 20.0)
+	then
+		$patient.getHighList().add("中高度抑郁");
+		System.out.println("中高度抑郁，高危");
+		update($patient);
+end
+
+rule "gdsScoreM"
+	activation-group "gdsScore"
+	//lock-on-active
+	no-loop
+	salience 6
+	when
+		$patient : Patient(patientType == Patient.OLD_PATIENT && midList not contains "轻度抑郁")
+		and
+		Assessment(gdsScore <= 20.0 && gdsScore >= 11.0)
+	then
+		$patient.getMidList().add("轻度抑郁");
+		System.out.println("轻度抑郁 ，中危");
+		update($patient);
+end
+
+rule "gdsScoreL"
+	activation-group "gdsScore"
+	//lock-on-active
+	no-loop
+	salience 6
+	when
+		$patient : Patient(patientType == Patient.OLD_PATIENT && lowList not contains "无抑郁")
+		and
+		Assessment(gdsScore <= 10.0)
+	then 
+		$patient.getLowList().add("无抑郁");
+		System.out.println("无抑郁，低危");
+		update($patient);
+end
+
+/**
+	6----------------心功能评级（NYHA分级）----------------6
+*/
+rule "nyhaH"
+	activation-group "nyha"
+	//lock-on-active
+	no-loop
+	salience 6
+	when
+		$patient : Patient(patientType == Patient.OLD_PATIENT && highList not contains "心功能评级III级")
+		and
+		Assessment(nyha == 3.0)
+	then
+		$patient.getHighList().add("心功能评级III级");
+		System.out.println("心功能评级III级，高危");
+		update($patient);
+end
+
+rule "nyhaM"
+	activation-group "nyha"
+	//lock-on-active
+	no-loop
+	salience 6
+	when
+		$patient : Patient(patientType == Patient.OLD_PATIENT && midList not contains "心功能评级II级")
+		and
+		Assessment(nyha == 2.0)
+	then
+		$patient.getMidList().add("心功能评级II级");
+		System.out.println("心功能评级II级 ，中危");
+		update($patient);
+end
+
+rule "nyhaL"
+	activation-group "nyha"
+	//lock-on-active
+	no-loop
+	salience 6
+	when
+		$patient : Patient(patientType == Patient.OLD_PATIENT && lowList not contains "心功能评级I级")
+		and
+		Assessment(nyha == 1.0)
+	then 
+		$patient.getLowList().add("心功能评级I级");
+		System.out.println("心功能评级I级，低危");
+		update($patient);
+end
+
+/**
+	7----------------心绞痛分级（CSS分级）----------------7
+*/
+rule "ccsH"
+	activation-group "ccs"
+	//lock-on-active
+	no-loop
+	salience 6
+	when
+		$patient : Patient(patientType == Patient.OLD_PATIENT && highList not contains "心绞痛分级III级")
+		and
+		Assessment(ccs == 3.0)
+	then
+		$patient.getHighList().add("心绞痛分级III级");
+		System.out.println("心绞痛分级III级，高危");
+		update($patient);
+end
+
+rule "ccsM"
+	activation-group "ccs"
+	//lock-on-active
+	no-loop
+	salience 6
+	when
+		$patient : Patient(patientType == Patient.OLD_PATIENT && midList not contains "心绞痛分级II级")
+		and
+		Assessment(ccs == 2.0)
+	then
+		$patient.getMidList().add("心绞痛分级II级");
+		System.out.println("心绞痛分级II级 ，中危");
+		update($patient);
+end
+
+rule "ccsL"
+	activation-group "ccs"
+	//lock-on-active
+	no-loop
+	salience 6
+	when
+		$patient : Patient(patientType == Patient.OLD_PATIENT && lowList not contains "心绞痛分级I级")
+		and
+		Assessment(ccs == 1.0)
+	then 
+		$patient.getLowList().add("心绞痛分级I级");
+		System.out.println("心绞痛分级I级，低危");
+		update($patient);
+end
+
+/**
+	8----------------呼吸功能（MRC分级）----------------8
+*/
+rule "mrcH"
+	activation-group "mrc"
+	//lock-on-active
+	no-loop
+	salience 6
+	when
+		$patient : Patient(patientType == Patient.OLD_PATIENT && highList not contains "中高度呼吸功能障碍")
+		and
+		Assessment(mrc >= 2.0 && mrc <= 4.0)
+	then
+		$patient.getHighList().add("中高度呼吸功能障碍");
+		System.out.println("中高度呼吸功能障碍，高危");
+		update($patient);
+end
+
+rule "mrcM"
+	activation-group "mrc"
+	//lock-on-active
+	no-loop
+	salience 6
+	when
+		$patient : Patient(patientType == Patient.OLD_PATIENT && midList not contains "轻度呼吸功能障碍")
+		and
+		Assessment(mrc >= 0.0 && mrc <= 1.0)
+	then
+		$patient.getMidList().add("轻度呼吸功能障碍");
+		System.out.println("轻度呼吸功能障碍 ，中危");
+		update($patient);
+end
+
+rule "mrcL"
+	activation-group "mrc"
+	//lock-on-active
+	no-loop
+	salience 6
+	when
+		$patient : Patient(patientType == Patient.OLD_PATIENT && lowList not contains "无呼吸功能障碍")
+		and
+		Assessment(mrc < -1.0)
+	then 
+		$patient.getLowList().add("无呼吸功能障碍");
+		System.out.println("无呼吸功能障碍，低危");
+		update($patient);
+end
+
+/**
+	9----------------认知功能（MMSE分级）----------------9
+*/
+rule "mmseH"
+	activation-group "mmse"
+	//lock-on-active
+	no-loop
+	salience 6
+	when
+		$patient : Patient(patientType == Patient.OLD_PATIENT && highList not contains "认知功能痴呆")
+		and
+		Assessment(mmseScore <= 22.0)
+	then
+		$patient.getHighList().add("认知功能痴呆");
+		System.out.println("认知功能痴呆，高危");
+		update($patient);
+end
+
+rule "mmseM"
+	activation-group "mmse"
+	//lock-on-active
+	no-loop
+	salience 6
+	when
+		$patient : Patient(patientType == Patient.OLD_PATIENT && midList not contains "认知功能障碍")
+		and
+		Assessment(mmseScore > 22.0 && mmseScore < 27.0)
+	then
+		$patient.getMidList().add("认知功能障碍");
+		System.out.println("认知功能障碍 ，中危");
+		update($patient);
+end
+
+rule "mmseL"
+	activation-group "mmse"
+	//lock-on-active
+	no-loop
+	salience 6
+	when
+		$patient : Patient(patientType == Patient.OLD_PATIENT && lowList not contains "认知功能正常")
+		and
+		Assessment(mmseScore >= 27.0 && mmseScore <= 30.0)
+	then 
+		$patient.getLowList().add("认知功能正常");
+		System.out.println("认知功能正常，低危");
+		update($patient);
+end
+
+/**
+	10----------------日常生活能力评估（ADL）----------------10
+*/
+rule "adlH"
+	activation-group "adl"
+	//lock-on-active
+	no-loop
+	salience 6
+	when
+		$patient : Patient(patientType == Patient.OLD_PATIENT && highList not contains "日常生活中高度功能障碍")
+		and
+		Assessment(adlScore <= 60.0)
+	then
+		$patient.getHighList().add("日常生活中度功能障碍");
+		System.out.println("日常生活中度功能障碍，高危");
+		update($patient);
+end
+
+rule "adlM"
+	activation-group "adl"
+	//lock-on-active
+	no-loop
+	salience 6
+	when
+		$patient : Patient(patientType == Patient.OLD_PATIENT && midList not contains "日常生活轻度功能障碍")
+		and
+		Assessment(adlScore > 60.0 && adlScore < 95.0)
+	then
+		$patient.getMidList().add("日常生活轻度功能障碍");
+		System.out.println("日常生活轻度功能障碍，中危");
+		update($patient);
+end
+
+rule "adlL"
+	activation-group "adl"
+	//lock-on-active
+	no-loop
+	salience 6
+	when
+		$patient : Patient(patientType == Patient.OLD_PATIENT && lowList not contains "日常生活活动能力良好")
+		and
+		Assessment(adlScore >= 95)
+	then 
+		$patient.getLowList().add("日常生活活动能力良好");
+		System.out.println("日常生活活动能力良好，低危");
+		update($patient);
+end
+
+/**
+	10----------------工具性日常生活能力评估（IADL）----------------10 problem
+*/
+rule "iadlH"
+	activation-group "iadl"
+	//lock-on-active
+	no-loop
+	salience 6
+	when
+		$patient : Patient(patientType == Patient.OLD_PATIENT && highList not contains "工具性日常生活中高度功能障碍")
+		and
+		Assessment(iadlScore >= 60.0 && iadlScore <= 79.0)
+	then
+		$patient.getHighList().add("工具性日常生活中高度功能障碍");
+		System.out.println("工具性日常生活中高度功能障碍，高危");
+		update($patient);
+end
+
+rule "iadlM"
+	activation-group "iadl"
+	//lock-on-active
+	no-loop
+	salience 6
+	when
+		$patient : Patient(patientType == Patient.OLD_PATIENT && midList not contains "工具性日常生活轻度功能障碍")
+		and
+		Assessment(iadlScore >= 21.0 && iadlScore <= 59.0)
+	then
+		$patient.getMidList().add("工具性日常生活轻度功能障碍");
+		System.out.println("工具性日常生活轻度功能障碍，中危");
+		update($patient);
+end
+
+rule "iadlL"
+	activation-group "iadl"
+	//lock-on-active
+	no-loop
+	salience 6
+	when
+		$patient : Patient(patientType == Patient.OLD_PATIENT && lowList not contains "工具性日常生活活动能力良好")
+		and
+		Assessment(iadlScore <= 20)
+	then 
+		$patient.getLowList().add("工具性日常生活活动能力良好");
+		System.out.println("工具性日常生活活动能力良好，低危");
+		update($patient);
+end
+
+
+/**
+	处理
+*/
+rule "highDeal-old"
+	activation-group "wtt"
+	//lock-on-active
+	no-loop
+	salience 3
+	when
+		$patient : Patient((highList.size > 0 || midList.size >= 3) && riskRank != Patient.HIGHRISK && patientType == Patient.OLD_PATIENT)
+	then
+		$patient.setRiskRank(Patient.HIGHRISK);
+		System.out.println("高龄冠心病患者高危处理。。。。。。"+$patient.getHighList().size());
+		update($patient);
+end
+
+rule "midDeal-old"
+	activation-group "wtt"
+	//lock-on-active
+	no-loop
+	salience 2
+	when
+		$patient:Patient(highList.size == 0 && midList.size > 0 && midList.size < 3 && riskRank != Patient.MIDRISK && patientType == Patient.OLD_PATIENT)
+	then
+		$patient.setRiskRank(Patient.MIDRISK);
+		System.out.println("高龄冠心病患者中危处理。。。。。。");
+		update($patient);
+end
+
+rule "lowDeal-old"
+	activation-group "wtt"
+	//lock-on-active
+	no-loop
+	salience 1
+	when
+		$patient : Patient(highList.size == 0 && midList.size == 0 && riskRank != Patient.LOWRISK && patientType == Patient.OLD_PATIENT)
+	then
+		$patient.setRiskRank(Patient.LOWRISK);
+		System.out.println("高龄冠心病患者低危处理。。。。。" + $patient.getPatientType());
+		update($patient);
+end
