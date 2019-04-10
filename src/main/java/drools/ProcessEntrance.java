@@ -24,6 +24,7 @@ import org.kie.api.runtime.KieSession;
 
 import entity.AccessProblem;
 import entity.Assessment;
+import entity.ExerciseCardiopulmonary;
 import entity.ExercisePlan;
 import entity.NoninvasiveCardiac;
 import entity.OtherTest;
@@ -59,7 +60,7 @@ public class ProcessEntrance {
         	kSession.setGlobal("midList", midList);
         	//patient
         	Patient patient = new Patient();
-        	patient.setAge(65);
+        	patient.setAge(95);
         	patient.setName("王婷婷");
         	patient.setGender("女");
         	patient.setBmi(8.32);
@@ -68,6 +69,17 @@ public class ProcessEntrance {
         	Assessment assessment = new Assessment();
         	assessment.setSasScore(70);
         	assessment.setSdsScore(63);
+        	assessment.setMnaScore(13);
+        	assessment.setFrailScore(0);
+        	assessment.setFallRiskScore(5);
+        	assessment.setSasScore(40);
+        	assessment.setGdsScore(4);
+        	assessment.setNyha(1);
+        	assessment.setCcs(1);
+        	assessment.setMrc(0);
+        	assessment.setMmseScore(29);
+        	assessment.setAdlScore(95);
+        	assessment.setIadlScore(15);
         	//other test
         	OtherTest otherTest = new OtherTest();
         	otherTest.setIsArrhythmia(OtherTest.NO_OCCER);
@@ -82,10 +94,17 @@ public class ProcessEntrance {
         	//无创心功能
         	NoninvasiveCardiac noninvasiveCardiac = new NoninvasiveCardiac();
         	noninvasiveCardiac.setEf(58.3);
-        	
-        	//
+        	noninvasiveCardiac.setHr(110);
+        	//运动心肺
+        	ExerciseCardiopulmonary exerciseCardiopulmonary = new ExerciseCardiopulmonary();
+        	//exerciseCardiopulmonary.setPeaceRate(104);
+        	exerciseCardiopulmonary.setPeakRate(122);
+        	//exerciseCardiopulmonary.setVo2Max(23.6);
+        	//exerciseCardiopulmonary.setTargetRate(targetRate);
+        	//运动方案
         	ExercisePlan exercisePlan = new ExercisePlan();
-        	
+        	kSession.insert(exercisePlan);
+        	kSession.insert(exerciseCardiopulmonary);
         	kSession.insert(noninvasiveCardiac);
         	kSession.insert(accessProblem);
         	kSession.insert(otherTest);
@@ -114,9 +133,9 @@ public class ProcessEntrance {
 					System.out.println("==="+midArr.get(k));
 				}
 			}
-            kSession.insert(exercisePlan);
-            int j = kSession.fireAllRules();
-            System.out.println(i+"....."+ j);
+            
+//            int j = kSession.fireAllRules();
+//            System.out.println(i+"....."+ j);
             
 		} catch (Exception e) {
 			// TODO: handle exception
