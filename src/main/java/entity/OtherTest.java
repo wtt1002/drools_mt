@@ -34,6 +34,9 @@ public class OtherTest {
 	private int angina;
 	//心电图缺血改变
 	private int ischemia;
+	//心肌钙蛋白浓度
+	private double ctnt;
+	private double ctni;
 	/**
 	 * @return the exerciseEquival
 	 */
@@ -81,6 +84,30 @@ public class OtherTest {
 	 */
 	public void setIschemia(int ischemia) {
 		this.ischemia = ischemia;
+	}
+	/**
+	 * @return the ctnt
+	 */
+	public double getCtnt() {
+		return ctnt;
+	}
+	/**
+	 * @param ctnt the ctnt to set
+	 */
+	public void setCtnt(double ctnt) {
+		this.ctnt = ctnt;
+	}
+	/**
+	 * @return the ctni
+	 */
+	public double getCtni() {
+		return ctni;
+	}
+	/**
+	 * @param ctni the ctni to set
+	 */
+	public void setCtni(double ctni) {
+		this.ctni = ctni;
 	}
 	
 }

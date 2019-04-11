@@ -13,7 +13,6 @@
 */  
 package entity;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 
 /**  
@@ -42,6 +41,8 @@ public class Patient {
 	public static final int HIGHRISK = 2;
 	public static final int MIDRISK = 1;
 	public static final int LOWRISK = 0;
+	public static final int URGENT_PCI = 1;
+	public static final int ELECTIVE_PCI = 2;
 	private String name;
 	private int age;
 	private String gender;
@@ -49,6 +50,7 @@ public class Patient {
 	private int weight;
 	private double bmi;
 	private int pci;
+	private int pciType = -1;
 	private int patientType = -1;
 	private int riskRank = -1;
 	public ArrayList<String> midList = new ArrayList<>();
@@ -198,6 +200,18 @@ public class Patient {
 	 */
 	public void setLowList(ArrayList<String> lowList) {
 		this.lowList = lowList;
+	}
+	/**
+	 * @return the pciType
+	 */
+	public int getPciType() {
+		return pciType;
+	}
+	/**
+	 * @param pciType the pciType to set
+	 */
+	public void setPciType(int pciType) {
+		this.pciType = pciType;
 	}
 	
 }

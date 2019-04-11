@@ -77,6 +77,8 @@ public class Assessment {
     private double iadlScore = -1;
     //老年抑郁评估
     private double gdsScore = -1;
+    //仅一次重复所能完成的最大重量单位
+    private double rm = -1;
 	/**
 	 * @return the sasScore
 	 */
@@ -439,6 +441,20 @@ public class Assessment {
 	 */
 	public void setGdsScore(double gdsScore) {
 		this.gdsScore = gdsScore;
+	}
+
+	/**
+	 * @return the rm
+	 */
+	public double getRm() {
+		return rm;
+	}
+
+	/**
+	 * @param rm the rm to set
+	 */
+	public void setRm(double rm) {
+		this.rm = rm;
 	}
     
 }
