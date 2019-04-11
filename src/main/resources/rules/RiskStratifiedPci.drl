@@ -17,6 +17,536 @@ global java.util.List<String> midList;
 *再血管后并发症
 *心理障碍
 *左心室射血分数
-*功能储备
-*血肌钙蛋白浓度
+*峰值摄氧量
+*峰值摄氧量百分预计值
+*AT
+*心肌钙蛋白浓度
+*pci类型
 */
+/**
+	1----------------心电图结论----------------1
+*/
+rule "lowHeartMap-pci"
+	activation-group "heartMap"
+	//lock-on-active
+	no-loop
+	salience 6
+    when
+        $patient : Patient(patientType == Patient.PCI_PATIENT && lowList not contains "恢复期未出现心绞痛和心电图缺血改变")
+        and
+        (OtherTest(angina == OtherTest.NO_OCCER) and OtherTest(ischemia == OtherTest.NO_OCCER))
+    then
+    	//$patient.setPatientType(Patient.OLD_PATIENT);
+        System.out.println( "心电图结论-低危患者");
+        $patient.getLowList().add("恢复期未出现心绞痛和心电图缺血改变");
+        System.out.println("6...顺序测试...5");
+        update($patient);
+end
+
+rule "midHeartMap-pci"
+	activation-group "heartMap"
+	//lock-on-active
+	no-loop
+	salience 4
+    when
+        $patient : Patient(patientType == Patient.PCI_PATIENT && midList not contains "恢复期出现心绞痛或心电图缺血改变")
+        and
+        (OtherTest(angina == OtherTest.OCCER) or OtherTest(ischemia == OtherTest.OCCER))
+    then
+    	//$patient.setPatientType(Patient.OLD_PATIENT);
+        System.out.println( "心电图结论-中危患者");
+        $patient.getMidList().add("恢复期出现心绞痛或心电图缺血改变");
+        //midList.add("恢复期出现心绞痛或心电图缺血改变");
+        System.out.println("4...顺序测试...6");
+        update($patient);
+end
+
+rule "HighHeartMap-pci"
+	activation-group "heartMap"
+	//lock-on-active
+	no-loop
+	salience 5
+    when
+        $patient : Patient(patientType == Patient.PCI_PATIENT && highList not contains "恢复期出现心绞痛和心电图缺血改变")
+        and
+        (OtherTest(angina == OtherTest.OCCER) and OtherTest(ischemia == OtherTest.OCCER))
+    then
+    	//$patient.setPatientType(Patient.OLD_PATIENT);
+        System.out.println( "心电图结论-高危患者");
+        $patient.getHighList().add("恢复期出现心绞痛和心电图缺血改变");
+        //highList.add("恢复期出现心绞痛和心电图缺血改变");
+        System.out.println("5...顺序测试...7");
+        update($patient);
+end
+
+/**
+	2----------------检查是否有心率不齐----------------2
+*/
+rule "isArrhythmia-pci"
+	//lock-on-active
+	no-loop
+	salience 6
+    when
+        $patient : Patient(patientType == Patient.PCI_PATIENT && highList not contains "运动出现心律失常")
+        and
+        OtherTest(isArrhythmia == OtherTest.OCCER)
+    then
+    	//$patient.setPatientType(Patient.OLD_PATIENT);
+        System.out.println( "运动出现心律失常");
+        $patient.getHighList().add("运动出现心律失常");
+        $patient.setRiskRank(Patient.HIGHRISK);
+        //highList.add("运动出现心律失常");
+        System.out.println("6...顺序测试...4");
+        update($patient);
+end
+
+/**
+	3----------------再血管化后并发症----------------3  problem
+*/
+rule "lowAccessProblem-pci"
+	activation-group "accessProblem"
+	//lock-on-active
+	no-loop
+	salience 4
+    when
+        $patient : Patient(patientType == Patient.PCI_PATIENT && lowList not contains "AMI溶栓血管再通，PCI或CABG后血管再通且无合并症")
+        and
+        (AccessProblem(vascularObstruction == OtherTest.NO_OCCER) and AccessProblem(shock == OtherTest.NO_OCCER))
+    then
+    	//$patient.setPatientType(Patient.OLD_PATIENT);
+        System.out.println( "并发症-低危患者");
+        $patient.getLowList().add("AMI溶栓血管再通，PCI或CABG后血管再通且无合并症");
+        System.out.println("4...顺序测试...8");
+        update($patient);
+end
+
+rule "midAccessProblem-pci"
+	activation-group "accessProblem"
+	//lock-on-active
+	no-loop
+	salience 5
+    when
+        $patient : Patient(patientType == Patient.PCI_PATIENT && midList not contains "血管阻塞且无合并心原性休克或心力衰竭")
+        and
+        AccessProblem(heartFailure == OtherTest.NO_OCCER && shock == OtherTest.NO_OCCER && vascularObstruction == OtherTest.OCCER)
+    then
+    	//$patient.setPatientType(Patient.OLD_PATIENT);
+        System.out.println( "并发症-中危患者");
+        $patient.getMidList().add("血管阻塞且无合并心原性休克或心力衰竭");
+        //midList.add("血管阻塞且无合并心原性休克或心力衰竭");
+        System.out.println("5...顺序测试...9");
+        update($patient);
+end
+
+rule "highAccessProblem-pci"
+	activation-group "accessProblem"
+	//lock-on-active
+	no-loop
+	salience 6
+    when
+        $patient : Patient(patientType == Patient.PCI_PATIENT && highList not contains "出现合并心原性休克或心力衰竭")
+        and
+        (AccessProblem(heartFailure == OtherTest.OCCER) or AccessProblem(shock == OtherTest.OCCER))
+    then
+    	//$patient.setPatientType(Patient.OLD_PATIENT);
+        System.out.println( "并发症-高危患者");
+        $patient.getHighList().add("出现合并心原性休克或心力衰竭");
+        //highList.add("出现合并心原性休克或心力衰竭");
+        System.out.println("6...顺序测试...10");
+        update($patient);
+end
+/**
+	4----------------检测心理障碍----------------4
+*/
+rule "lowAnger-pci"
+	activation-group "anger"
+	//lock-on-active
+	no-loop
+	salience 6
+    when
+        $patient : Patient(patientType == Patient.PCI_PATIENT && lowList not contains "无心理障碍")
+        and
+        Assessment((sasScore < 50 && sasScore >= 0) && (sdsScore < 53 && sdsScore >= 0))
+    then
+    	//$patient.setPatientType(Patient.OLD_PATIENT);
+        System.out.println( "心理障碍-低危患者//////");
+        $patient.getLowList().add("无心理障碍");
+        System.out.println("6...顺序测试...1");
+        update($patient);
+end
+
+rule "midAnger-pci"
+	activation-group "anger"
+	//lock-on-active
+	no-loop
+	salience 4
+    when
+        $patient : Patient(patientType == Patient.PCI_PATIENT && midList not contains "无严重心理障碍")
+        and
+        Assessment((sasScore >=50 && sasScore <= 70)||(sdsScore >=53 && sdsScore <= 72))
+    then
+    	//$patient.setPatientType(Patient.OLD_PATIENT);
+        System.out.println( "心理障碍-中危患者");
+        $patient.getMidList().add("无严重心理障碍");
+        //midList.add("无严重心理障碍");
+        System.out.println("4...顺序测试...2");
+        update($patient);
+end
+
+rule "highAnger-pci"
+	activation-group "anger"
+	//lock-on-active
+	no-loop
+	salience 5
+    when
+        $patient : Patient(patientType == Patient.PCI_PATIENT && highList not contains "严重心理障碍")
+        and
+        Assessment(sasScore > 70 || sdsScore >72)
+    then
+    	//$patient.setPatientType(Patient.OLD_PATIENT);
+        System.out.println( "心理障碍-高危患者");
+        $patient.getHighList().add("严重心理障碍");
+        //highList.add("严重心理障碍");
+        System.out.println("5...顺序测试...3");
+        update($patient);
+end
+
+/**
+	5----------------左心室射血分数----------------5
+*/
+rule "lowEf-pci"
+	activation-group "ef"
+	//lock-on-active
+	no-loop
+	salience 4
+    when
+        $patient : Patient(patientType == Patient.PCI_PATIENT && lowList not contains "左心室射血分数>=50%")
+        and
+        NoninvasiveCardiac(ef >= 50)
+    then
+    	//$patient.setPatientType(Patient.OLD_PATIENT);
+        System.out.println( "射血分数-低危患者");
+        $patient.getLowList().add("左心室射血分数>=50%");
+        System.out.println("4...顺序测试...14");
+        update($patient);
+end
+
+rule "midEf-pci"
+	activation-group "ef"
+	//lock-on-active
+	no-loop
+	salience 5
+    when
+        $patient : Patient(patientType == Patient.PCI_PATIENT  && midList not contains "左心室射血分数 40%~49%")
+        and
+        NoninvasiveCardiac(ef <= 49 && ef >= 40)
+    then
+    	//$patient.setPatientType(Patient.OLD_PATIENT);
+        System.out.println( "射血分数-中危患者");
+        $patient.getMidList().add("左心室射血分数 40%~49%");
+        //midList.add("无严重心理障碍");
+        System.out.println("5...顺序测试...15");
+        update($patient);
+end
+
+rule "highEf-pci"
+	activation-group "ef"
+	//lock-on-active
+	no-loop
+	salience 6
+    when
+        $patient : Patient(patientType == Patient.PCI_PATIENT && highList not contains "左心室射血分数<=40%")
+        and
+        NoninvasiveCardiac(ef < 40 && ef >= 0)
+    then
+    	//$patient.setPatientType(Patient.OLD_PATIENT);
+        System.out.println( "射血分数-高危患者");
+        $patient.getHighList().add("左心室射血分数<=40%");
+        //highList.add("左心室射血分数<40%");
+        System.out.println("6...顺序测试...16");
+        update($patient);
+end
+
+/**
+	6----------------峰值摄氧量----------------6
+*/
+rule "peakvo2L-pci"
+	activation-group "peakvo2"
+	//lock-on-active
+	no-loop
+	salience 4
+    when
+        $patient : Patient(patientType == Patient.PCI_PATIENT && lowList not contains "峰值摄氧量低危")
+        and
+        ExerciseCardiopulmonary(vo2Max >= 20)
+    then
+    	//$patient.setPatientType(Patient.OLD_PATIENT);
+        System.out.println( "峰值摄氧量-低危患者");
+        $patient.getLowList().add("峰值摄氧量低危");
+        System.out.println("4...顺序测试...14");
+        update($patient);
+end
+
+rule "peakvo2M-pci"
+	activation-group "peakvo2"
+	//lock-on-active
+	no-loop
+	salience 5
+    when
+        $patient : Patient(patientType == Patient.PCI_PATIENT  && midList not contains "峰值摄氧量中危")
+        and
+        ExerciseCardiopulmonary(vo2Max <= 19 && vo2Max >= 15)
+    then
+    	//$patient.setPatientType(Patient.OLD_PATIENT);
+        System.out.println( "峰值摄氧量-中危患者");
+        $patient.getMidList().add("峰值摄氧量中危");
+        //midList.add("无严重心理障碍");
+        System.out.println("5...顺序测试...15");
+        update($patient);
+end
+
+rule "peakvo2H-pci"
+	activation-group "peakvo2"
+	//lock-on-active
+	no-loop
+	salience 6
+    when
+        $patient : Patient(patientType == Patient.PCI_PATIENT && highList not contains "峰值摄氧量高危")
+        and
+        ExerciseCardiopulmonary(vo2Max < 15 && vo2Max >= 0)
+    then
+    	//$patient.setPatientType(Patient.OLD_PATIENT);
+        System.out.println( "峰值摄氧量-高危患者");
+        $patient.getHighList().add("峰值摄氧量高危");
+        //highList.add("左心室射血分数<40%");
+        System.out.println("6...顺序测试...16");
+        update($patient);
+end
+/**
+	7----------------峰值摄氧量百分比预计值----------------7
+*/
+rule "efv1RateL-pci"
+	activation-group "efv1Rate"
+	//lock-on-active
+	no-loop
+	salience 4
+    when
+        $patient : Patient(patientType == Patient.PCI_PATIENT && lowList not contains "峰值摄氧量百分预计值低危")
+        and
+        ExerciseCardiopulmonary(efv1Rate >= 80)
+    then
+    	//$patient.setPatientType(Patient.OLD_PATIENT);
+        System.out.println( "峰值摄氧量百分预计值-低危患者");
+        $patient.getLowList().add("峰值摄氧量百分预计值低危");
+        System.out.println("4...顺序测试...14");
+        update($patient);
+end
+
+rule "efv1RateM-pci"
+	activation-group "efv1Rate"
+	//lock-on-active
+	no-loop
+	salience 5
+    when
+        $patient : Patient(patientType == Patient.PCI_PATIENT  && midList not contains "峰值摄氧量百分预计值中危")
+        and
+        ExerciseCardiopulmonary(efv1Rate <= 79 && efv1Rate >= 65)
+    then
+    	//$patient.setPatientType(Patient.OLD_PATIENT);
+        System.out.println( "峰值摄氧量百分预计值-中危患者");
+        $patient.getMidList().add("峰值摄氧量百分预计值中危");
+        //midList.add("无严重心理障碍");
+        System.out.println("5...顺序测试...15");
+        update($patient);
+end
+
+rule "efv1RateH-pci"
+	activation-group "efv1Rate"
+	//lock-on-active
+	no-loop
+	salience 6
+    when
+        $patient : Patient(patientType == Patient.PCI_PATIENT && highList not contains "峰值摄氧量百分预计值高危")
+        and
+        ExerciseCardiopulmonary(efv1Rate < 65 && efv1Rate >= 0)
+    then
+    	//$patient.setPatientType(Patient.OLD_PATIENT);
+        System.out.println( "峰值摄氧量百分预计值-高危患者");
+        $patient.getHighList().add("峰值摄氧量百分预计值高危");
+        //highList.add("左心室射血分数<40%");
+        System.out.println("6...顺序测试...16");
+        update($patient);
+end
+/**
+	8----------------AT----------------8
+*/
+rule "atL-pci"
+	activation-group "at"
+	//lock-on-active
+	no-loop
+	salience 4
+    when
+        $patient : Patient(patientType == Patient.PCI_PATIENT && lowList not contains "无氧阈值低危")
+        and
+        ExerciseCardiopulmonary(at >= 15)
+    then
+    	//$patient.setPatientType(Patient.OLD_PATIENT);
+        System.out.println( "无氧阈值-低危患者");
+        $patient.getLowList().add("无氧阈值低危");
+        System.out.println("4...顺序测试...14");
+        update($patient);
+end
+
+rule "atM-pci"
+	activation-group "at"
+	//lock-on-active
+	no-loop
+	salience 5
+    when
+        $patient : Patient(patientType == Patient.PCI_PATIENT  && midList not contains "无氧阈值中危")
+        and
+        ExerciseCardiopulmonary(at <= 14 && at >= 12)
+    then
+    	//$patient.setPatientType(Patient.OLD_PATIENT);
+        System.out.println( "无氧阈值-中危患者");
+        $patient.getMidList().add("无氧阈值中危");
+        //midList.add("无严重心理障碍");
+        System.out.println("5...顺序测试...15");
+        update($patient);
+end
+
+rule "atH-pci"
+	activation-group "at"
+	//lock-on-active
+	no-loop
+	salience 6
+    when
+        $patient : Patient(patientType == Patient.PCI_PATIENT && highList not contains "无氧阈值高危")
+        and
+        ExerciseCardiopulmonary(at < 12 && at >= 0)
+    then
+    	//$patient.setPatientType(Patient.OLD_PATIENT);
+        System.out.println( "无氧阈值-高危患者");
+        $patient.getHighList().add("无氧阈值高危");
+        //highList.add("左心室射血分数<40%");
+        System.out.println("6...顺序测试...16");
+        update($patient);
+end
+/**
+	9----------------心肌钙蛋白浓度ctni----------------9
+*/
+
+rule "ctnML-pci"
+	activation-group "ctn"
+	//lock-on-active
+	no-loop
+	salience 5
+    when
+        $patient : Patient(patientType == Patient.PCI_PATIENT  && lowList not contains "心肌肌钙蛋白浓度正常")
+        and
+        OtherTest(ctni <= 0.13 && ctni >= 0.02)
+    then
+    	//$patient.setPatientType(Patient.OLD_PATIENT);
+        System.out.println( "心肌肌钙蛋白浓度正常-低危患者");
+        $patient.getLowList().add("心肌肌钙蛋白浓度正常");
+        //midList.add("无严重心理障碍");
+        System.out.println("5...顺序测试...15");
+        update($patient);
+end
+
+rule "ctnH-pci"
+	activation-group "ctn"
+	//lock-on-active
+	no-loop
+	salience 6
+    when
+        $patient : Patient(patientType == Patient.PCI_PATIENT && highList not contains "心肌肌钙蛋白浓度升高")
+        and
+        OtherTest(ctni > 0.13)
+    then
+    	//$patient.setPatientType(Patient.OLD_PATIENT);
+        System.out.println( "心肌肌钙蛋白浓度升高-高危患者");
+        $patient.getHighList().add("心肌肌钙蛋白浓度升高");
+        //highList.add("左心室射血分数<40%");
+        System.out.println("6...顺序测试...16");
+        update($patient);
+end
+/**
+	10----------------PCI类型----------------10
+*/
+rule "pciTypeL-pci"
+	activation-group "pciType"
+	//lock-on-active
+	no-loop
+	salience 4
+    when
+        $patient : Patient(patientType == Patient.PCI_PATIENT && pciType == Patient.ELECTIVE_PCI && lowList not contains "择期PCI、单只病变")
+        and
+        ExerciseCardiopulmonary(at >= 15)
+    then
+    	//$patient.setPatientType(Patient.OLD_PATIENT);
+        System.out.println( "择期PCI、单只病变-低危患者");
+        $patient.getLowList().add("择期PCI、单只病变");
+        System.out.println("4...顺序测试...14");
+        update($patient);
+end
+
+rule "pciTypeHM-pci"
+	activation-group "pciType"
+	//lock-on-active
+	no-loop
+	salience 6
+    when
+        $patient : Patient(patientType == Patient.PCI_PATIENT && pciType == Patient.URGENT_PCI && highList not contains "急诊PCI、部分重建PCI")
+        and
+        ExerciseCardiopulmonary(at < 12 && at >= 0)
+    then
+    	//$patient.setPatientType(Patient.OLD_PATIENT);
+        System.out.println( "急诊PCI、部分重建PCI-高危患者");
+        $patient.getHighList().add("急诊PCI、部分重建PCI");
+        //highList.add("左心室射血分数<40%");
+        System.out.println("6...顺序测试...16");
+        update($patient);
+end
+
+/**
+	处理
+*/
+rule "highDeal-pci"
+	activation-group "wtt"
+	//lock-on-active
+	no-loop
+	salience 3
+	when
+		$patient : Patient(highList.size > 0 && riskRank != Patient.HIGHRISK && patientType == Patient.PCI_PATIENT)
+	then
+		$patient.setRiskRank(Patient.HIGHRISK);
+		System.out.println("PCI冠心病患者高危处理。。。。。。"+$patient.getHighList().size());
+		update($patient);
+end
+
+rule "midDeal-pci"
+	activation-group "wtt"
+	//lock-on-active
+	no-loop
+	salience 2
+	when
+		$patient:Patient(highList.size == 0 && midList.size > 0 && riskRank != Patient.MIDRISK && patientType == Patient.PCI_PATIENT)
+	then
+		$patient.setRiskRank(Patient.MIDRISK);
+		System.out.println("PCI冠心病患者中危处理。。。。。。");
+		update($patient);
+end
+
+rule "lowDeal-pci"
+	activation-group "wtt"
+	//lock-on-active
+	no-loop
+	salience 1
+	when
+		$patient : Patient(highList.size == 0 && midList.size == 0 && riskRank != Patient.LOWRISK && patientType == Patient.PCI_PATIENT)
+	then
+		$patient.setRiskRank(Patient.LOWRISK);
+		System.out.println("PCI冠心病患者低危处理。。。。。" + $patient.getPatientType());
+		update($patient);
+end
