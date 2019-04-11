@@ -60,19 +60,19 @@ public class ProcessEntrance {
         	kSession.setGlobal("midList", midList);
         	//patient
         	Patient patient = new Patient();
-        	patient.setAge(95);
+        	patient.setAge(45);
         	patient.setName("王婷婷");
         	patient.setGender("女");
         	patient.setBmi(8.32);
-        	patient.setPci(Patient.NO_PCI);
+        	patient.setPci(Patient.HAS_PCI);
+        	patient.setPciType(Patient.ELECTIVE_PCI);
         	//Assessment
         	Assessment assessment = new Assessment();
-        	assessment.setSasScore(70);
-        	assessment.setSdsScore(63);
+        	assessment.setSasScore(80);
+        	assessment.setSdsScore(44);
         	assessment.setMnaScore(13);
         	assessment.setFrailScore(0);
         	assessment.setFallRiskScore(5);
-        	assessment.setSasScore(40);
         	assessment.setGdsScore(4);
         	assessment.setNyha(1);
         	assessment.setCcs(1);
@@ -80,12 +80,14 @@ public class ProcessEntrance {
         	assessment.setMmseScore(29);
         	assessment.setAdlScore(95);
         	assessment.setIadlScore(15);
+        	assessment.setRm(8);
         	//other test
         	OtherTest otherTest = new OtherTest();
         	otherTest.setIsArrhythmia(OtherTest.NO_OCCER);
         	otherTest.setAngina(OtherTest.NO_OCCER);
         	otherTest.setIschemia(OtherTest.NO_OCCER);
         	otherTest.setExerciseEquival(6.0);
+        	otherTest.setCtni(0.11);
         	//accessProblem
         	AccessProblem accessProblem = new AccessProblem();
         	accessProblem.setShock(AccessProblem.NO_OCCER);
@@ -99,7 +101,10 @@ public class ProcessEntrance {
         	ExerciseCardiopulmonary exerciseCardiopulmonary = new ExerciseCardiopulmonary();
         	//exerciseCardiopulmonary.setPeaceRate(104);
         	exerciseCardiopulmonary.setPeakRate(122);
-        	//exerciseCardiopulmonary.setVo2Max(23.6);
+        	exerciseCardiopulmonary.setVo2Max(23.6);
+        	exerciseCardiopulmonary.setEfv1Rate(87);
+        	exerciseCardiopulmonary.setAt(18);
+        	//exerciseCardiopulmonary.setPeakVo2(22.2);
         	//exerciseCardiopulmonary.setTargetRate(targetRate);
         	//运动方案
         	ExercisePlan exercisePlan = new ExercisePlan();
