@@ -48,7 +48,7 @@ public class ExercisePlan extends Object {
 	//有氧运动频率
 	private List<Double> oxyTimes = new ArrayList<>();
 	//有氧运动劳累程度
-	private List<Double> oxyTired = new ArrayList<>();
+	private List<Double> oxyRpe = new ArrayList<>();
 	//阻抗训练
 	private List<Double> upImStrength = new ArrayList<>();
 	private List<Double> downImStrength = new ArrayList<>();
@@ -56,11 +56,15 @@ public class ExercisePlan extends Object {
 	private List<Double> imSingleTime = new ArrayList<>();
 	private List<Double> imMuscles = new ArrayList<>();
 	private List<Double> imSingleWeek = new ArrayList<>();
+	//阻抗训练劳累程度
+	private List<Double> imRpe = new ArrayList<>();
 	//柔韧性运动处方
 	private List<Double> flexDuration = new ArrayList<>();
 	private List<Double> flexTargetDuration = new ArrayList<>();
 	private List<Double> flexTotalDuration = new ArrayList<>();
 	private List<Double> flexSingleWeek = new ArrayList<>();
+	//柔韧性劳累程度
+	private List<Double> flexRpe = new ArrayList<>();
 	/**
 	 * @return the strength
 	 */
@@ -267,17 +271,67 @@ public class ExercisePlan extends Object {
 	public void setOxyTimes(List<Double> oxyTimes) {
 		this.oxyTimes = oxyTimes;
 	}
+
 	/**
-	 * @return the oxyTired
+	 * @return the oxyRpe
 	 */
-	public List<Double> getOxyTired() {
-		return oxyTired;
+	public List<Double> getOxyRpe() {
+		return oxyRpe;
 	}
 	/**
-	 * @param oxyTired the oxyTired to set
+	 * @param oxyRpe the oxyRpe to set
 	 */
-	public void setOxyTired(List<Double> oxyTired) {
-		this.oxyTired = oxyTired;
+	public void setOxyRpe(List<Double> oxyRpe) {
+		this.oxyRpe = oxyRpe;
 	}
+	/**
+	 * @return the imRpe
+	 */
+	public List<Double> getImRpe() {
+		return imRpe;
+	}
+	/**
+	 * @param imRpe the imRpe to set
+	 */
+	public void setImRpe(List<Double> imRpe) {
+		this.imRpe = imRpe;
+	}
+	/**
+	 * @return the flexRpe
+	 */
+	public List<Double> getFlexRpe() {
+		return flexRpe;
+	}
+	/**
+	 * @param flexRpe the flexRpe to set
+	 */
+	public void setFlexRpe(List<Double> flexRpe) {
+		this.flexRpe = flexRpe;
+	}
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "ExercisePlan [strengthStart=" + strengthStart + ", strengthEnd=" + strengthEnd + ", strenghVo2="
+				+ strenghVo2 + ", strength=" + strength + ", oxyStrength=" + oxyStrength + ", oxyDuration="
+				+ oxyDuration + ", oxyTimes=" + oxyTimes + ", oxyRpe=" + oxyRpe + ", upImStrength=" + upImStrength
+				+ ", downImStrength=" + downImStrength + ", imSingleGroup=" + imSingleGroup + ", imSingleTime="
+				+ imSingleTime + ", imMuscles=" + imMuscles + ", imSingleWeek=" + imSingleWeek + ", imRpe=" + imRpe
+				+ ", flexDuration=" + flexDuration + ", flexTargetDuration=" + flexTargetDuration
+				+ ", flexTotalDuration=" + flexTotalDuration + ", flexSingleWeek=" + flexSingleWeek + ", flexRpe="
+				+ flexRpe + ", getStrength()=" + getStrength() + ", getStrengthStart()=" + getStrengthStart()
+				+ ", getStrengthEnd()=" + getStrengthEnd() + ", getStrenghVo2()=" + getStrenghVo2()
+				+ ", getUpImStrength()=" + getUpImStrength() + ", getDownImStrength()=" + getDownImStrength()
+				+ ", getImSingleGroup()=" + getImSingleGroup() + ", getImSingleTime()=" + getImSingleTime()
+				+ ", getImSingleWeek()=" + getImSingleWeek() + ", getImMuscles()=" + getImMuscles()
+				+ ", getFlexDuration()=" + getFlexDuration() + ", getFlexTargetDuration()=" + getFlexTargetDuration()
+				+ ", getFlexTotalDuration()=" + getFlexTotalDuration() + ", getFlexSingleWeek()=" + getFlexSingleWeek()
+				+ ", getOxyStrength()=" + getOxyStrength() + ", getOxyDuration()=" + getOxyDuration()
+				+ ", getOxyTimes()=" + getOxyTimes() + ", getOxyRpe()=" + getOxyRpe() + ", getImRpe()=" + getImRpe()
+				+ ", getFlexRpe()=" + getFlexRpe() + ", getClass()=" + getClass() + ", hashCode()=" + hashCode()
+				+ ", toString()=" + super.toString() + "]";
+	}
+
 	
 }

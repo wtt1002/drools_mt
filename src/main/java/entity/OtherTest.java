@@ -27,6 +27,10 @@ package entity;
 public class OtherTest {
 	public static final int OCCER = 1;
 	public static final int NO_OCCER = 0;
+	public static final int STRONG_WORK = 1;
+	public static final int MEDIUM_WORK = 2;
+	public static final int LITTLE_WORK = 3;
+	public static final int NO_WORK = 4;
 	private double exerciseEquival;
 	//心律失常
 	private int isArrhythmia;
@@ -37,6 +41,9 @@ public class OtherTest {
 	//心肌钙蛋白浓度
 	private double ctnt;
 	private double ctni;
+	//劳动强度
+	private int workRank = -1;
+	
 	/**
 	 * @return the exerciseEquival
 	 */
@@ -108,6 +115,18 @@ public class OtherTest {
 	 */
 	public void setCtni(double ctni) {
 		this.ctni = ctni;
+	}
+	/**
+	 * @return the workRank
+	 */
+	public int getWorkRank() {
+		return workRank;
+	}
+	/**
+	 * @param workRank the workRank to set
+	 */
+	public void setWorkRank(int workRank) {
+		this.workRank = workRank;
 	}
 	
 }
