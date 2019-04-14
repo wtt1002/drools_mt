@@ -31,6 +31,17 @@ function void highRiskPlan2(){
 /**
 	1------------------------------------------------运动强度------------------------------------------------1
 */
+rule "AerobicRPE"
+	salience 0
+	when
+		Patient()
+		and
+		$exercisePlan : ExercisePlan()
+	then
+		$exercisePlan.getOxyRpe().add(12.0);
+		$exercisePlan.getOxyRpe().add(16.0);
+		System.out.println("0...有氧训练自我感知疲劳程度分级=================================");
+end
 //  1.1-------------------------心率储备法-------------------------1.1
 rule "AerobicStrengh1-h"
 	activation-group "exerciseStrength"
@@ -337,6 +348,8 @@ rule "impedanceStrength1-h"
 		$exercisePlan.getUpImStrength().add($assessment.getRm()*0.30);
 		$exercisePlan.getDownImStrength().add($assessment.getRm()*0.50);
 		$exercisePlan.getDownImStrength().add($assessment.getRm()*0.50);
+		$exercisePlan.getImRpe().add(11.0);
+		$exercisePlan.getImRpe().add(13.0);
 		System.out.println("6...阻抗训练强度=================================" + $assessment.getRm()*0.30 +"-" +$assessment.getRm()*0.50);
 end
 
@@ -355,6 +368,8 @@ rule "impedanceStrength1-m"
 		$exercisePlan.getUpImStrength().add($assessment.getRm()*0.35);
 		$exercisePlan.getDownImStrength().add($assessment.getRm()*0.55);
 		$exercisePlan.getDownImStrength().add($assessment.getRm()*0.55);
+		$exercisePlan.getImRpe().add(11.0);
+		$exercisePlan.getImRpe().add(13.0);
 		System.out.println("6...阻抗训练强度=================================" + $assessment.getRm()*0.35 +"-" +$assessment.getRm()*0.55);
 end
 
@@ -373,6 +388,8 @@ rule "impedanceStrength1-l"
 		$exercisePlan.getUpImStrength().add($assessment.getRm()*0.40);
 		$exercisePlan.getDownImStrength().add($assessment.getRm()*0.60);
 		$exercisePlan.getDownImStrength().add($assessment.getRm()*0.60);
+		$exercisePlan.getImRpe().add(11.0);
+		$exercisePlan.getImRpe().add(13.0);
 		System.out.println("6...阻抗训练强度=================================" + $assessment.getRm()*0.40 +"-" +$assessment.getRm()*0.60);
 end
 
@@ -392,6 +409,8 @@ rule "impedanceStrength2-h"
 		$exercisePlan.getUpImStrength().add($assessment.getRm()*0.25);
 		$exercisePlan.getDownImStrength().add($assessment.getRm()*0.25);
 		$exercisePlan.getDownImStrength().add($assessment.getRm()*0.30);
+		$exercisePlan.getImRpe().add(10.0);
+		$exercisePlan.getImRpe().add(11.0);
 		System.out.println("6...阻抗训练强度=================================" + $assessment.getRm()*0.30 +"-" +$assessment.getRm()*0.50);
 end
 
@@ -410,6 +429,8 @@ rule "impedanceStrength2-m"
 		$exercisePlan.getUpImStrength().add($assessment.getRm()*0.50);
 		$exercisePlan.getDownImStrength().add($assessment.getRm()*0.50);
 		$exercisePlan.getDownImStrength().add($assessment.getRm()*0.60);
+		$exercisePlan.getImRpe().add(11.0);
+		$exercisePlan.getImRpe().add(13.0);
 		System.out.println("6...阻抗训练强度=================================" + $assessment.getRm()*0.35 +"-" +$assessment.getRm()*0.55);
 end
 
@@ -428,6 +449,8 @@ rule "impedanceStrength2-l"
 		$exercisePlan.getUpImStrength().add($assessment.getRm()*0.65);
 		$exercisePlan.getDownImStrength().add($assessment.getRm()*0.65);
 		$exercisePlan.getDownImStrength().add($assessment.getRm()*0.70);
+		$exercisePlan.getImRpe().add(13.0);
+		$exercisePlan.getImRpe().add(16.0);
 		System.out.println("6...阻抗训练强度=================================" + $assessment.getRm()*0.40 +"-" +$assessment.getRm()*0.60);
 end
 //  4.3-------------------------PCI冠心病患者-------------------------4.3
@@ -446,6 +469,8 @@ rule "impedanceStrength3-h"
 		$exercisePlan.getUpImStrength().add($assessment.getRm()*0.25);
 		$exercisePlan.getDownImStrength().add($assessment.getRm()*0.25);
 		$exercisePlan.getDownImStrength().add($assessment.getRm()*0.30);
+		$exercisePlan.getImRpe().add(10.0);
+		$exercisePlan.getImRpe().add(11.0);
 		System.out.println("6...阻抗训练强度=================================" + $assessment.getRm()*0.30 +"-" +$assessment.getRm()*0.50);
 end
 
@@ -464,6 +489,8 @@ rule "impedanceStrength3-m"
 		$exercisePlan.getUpImStrength().add($assessment.getRm()*0.25);
 		$exercisePlan.getDownImStrength().add($assessment.getRm()*0.25);
 		$exercisePlan.getDownImStrength().add($assessment.getRm()*0.30);
+		$exercisePlan.getImRpe().add(10.0);
+		$exercisePlan.getImRpe().add(11.0);
 		System.out.println("6...阻抗训练强度=================================" + $assessment.getRm()*0.35 +"-" +$assessment.getRm()*0.55);
 end
 
@@ -482,6 +509,8 @@ rule "impedanceStrength3-l"
 		$exercisePlan.getUpImStrength().add($assessment.getRm()*0.60);
 		$exercisePlan.getDownImStrength().add($assessment.getRm()*0.60);
 		$exercisePlan.getDownImStrength().add($assessment.getRm()*0.70);
+		$exercisePlan.getImRpe().add(10.0);
+		$exercisePlan.getImRpe().add(11.0);
 		System.out.println("6...阻抗训练强度=================================" + $assessment.getRm()*0.40 +"-" +$assessment.getRm()*0.60);
 end
 
@@ -504,8 +533,8 @@ rule "impedanceGroup1-hml"
 		$exercisePlan.getImMuscles().add(8.0);
 		$exercisePlan.getImMuscles().add(10.0);
 		//一组几个
-		//$exercisePlan.getImSingleGroup().add(8.0);
-		//$exercisePlan.getImSingleGroup().add(10.0);
+		$exercisePlan.getImSingleGroup().add(8.0);
+		$exercisePlan.getImSingleGroup().add(10.0);
 		//一次几组
 		$exercisePlan.getImSingleTime().add(2.0);
 		$exercisePlan.getImSingleTime().add(3.0);
@@ -606,8 +635,8 @@ rule "impedanceGroup3-hml"
 	then
 		System.out.println("6...阻抗训练量和频率=================================");
 		//一个几个肌群
-		//$exercisePlan.getImMuscles().add(1.0);
-		//$exercisePlan.getImMuscles().add(3.0);
+		$exercisePlan.getImMuscles().add(1.0);
+		$exercisePlan.getImMuscles().add(3.0);
 		//一组几个
 		$exercisePlan.getImSingleGroup().add(10.0);
 		$exercisePlan.getImSingleGroup().add(15.0);
