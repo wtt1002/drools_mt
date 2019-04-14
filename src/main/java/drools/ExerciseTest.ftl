@@ -169,7 +169,7 @@
 										<w:rPr>
 											<w:rFonts w:hint="eastAsia"/>
 										</w:rPr>
-										<w:t>${youyangstrength}</w:t>
+										<w:t>${youyangstrength!"3333"}</w:t>
 									</w:r>
 									<w:r>
 										<w:t>自我疲劳感知</w:t>

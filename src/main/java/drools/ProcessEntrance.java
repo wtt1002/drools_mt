@@ -34,8 +34,10 @@ import org.kie.api.runtime.KieSession;
 
 import entity.AccessProblem;
 import entity.Assessment;
+import entity.Conclusion;
 import entity.ExerciseCardiopulmonary;
 import entity.ExercisePlan;
+import entity.FoodPlan;
 import entity.NoninvasiveCardiac;
 import entity.OtherTest;
 import entity.Patient;
@@ -57,7 +59,14 @@ import freemarker.template.TemplateException;
 public class ProcessEntrance {
     private Configuration configuration = null;
     private ExercisePlan exercisePlan = null;
-    
+    private Patient patient = null;
+    private NoninvasiveCardiac noninvasiveCardiac = null;
+    private FoodPlan foodPlan = null;
+    private AccessProblem accessProblem = null;
+    private Assessment assessment = null;
+    private OtherTest otherTest = null;
+    private ExerciseCardiopulmonary exerciseCardiopulmonary = null;
+    private Conclusion conclusion = null;
 	/**
 	 * @param 
 	 */
@@ -72,7 +81,7 @@ public class ProcessEntrance {
 		// TODO Auto-generated method stub
 		ProcessEntrance entrance = new ProcessEntrance();
 		entrance.initPlan();
-		//entrance.printToDoc();
+		entrance.printToDoc();
 
 	}
 	/**
@@ -84,7 +93,7 @@ public class ProcessEntrance {
         configuration.setClassForTemplateLoading(this.getClass(), "");//模板文件所在路径
         Template t=null;  
         try {  
-            t = configuration.getTemplate("ExerciseTest.ftl"); //获取模板文件
+            t = configuration.getTemplate("all2.ftl"); //获取模板文件
         } catch (IOException e) {  
             e.printStackTrace();  
         }  
@@ -115,15 +124,11 @@ public class ProcessEntrance {
 	 * @param dataMap
 	 */
     private void getData(Map<String, Object> dataMap) { 
-        dataMap.put("youyangstrength", exercisePlan.getStrenghVo2());  
-        dataMap.put("youyangmin", exercisePlan.getOxyDuration().get(0));  
-        dataMap.put("youyangtime", exercisePlan.getOxyTimes().get(0));  
-        dataMap.put("zukanggroup", exercisePlan.getImSingleTime().get(0));   
-        dataMap.put("zukangunit", exercisePlan.getImSingleGroup().get(0));
-        dataMap.put("zukangmuscls", 2222);   
-        dataMap.put("zukangtime", exercisePlan.getImSingleWeek().get(0));
         if (exercisePlan.getStrenghVo2() != -1) {
         	dataMap.put("youyangstrength", "运动强度为"+exercisePlan.getStrenghVo2()+"vo2/kg");
+		}
+        if (exercisePlan.getOxyStrength().size() > 0) {
+			dataMap.put("youyangstrength", "运动心率控制在"+assemleData(exercisePlan.getOxyStrength()) + "之间");
 		}
         //劳累程度
         dataMap.put("oxyrpe", assemleData(exercisePlan.getOxyRpe()));
@@ -152,17 +157,75 @@ public class ProcessEntrance {
         //柔韧训练时长
         dataMap.put("rourentotal", assemleData(exercisePlan.getFlexTotalDuration()));
         //柔韧训练频率
-        dataMap.put("rourentime", assemleData(exercisePlan.getFlexSingleWeek()));
-//        List<Map<String,Object>> list = new ArrayList<Map<String,Object>>();  
-//        for (int i = 0; i < 10; i++) {  
-//            Map<String,Object> map = new HashMap<String,Object>();  
-//            map.put("xuehao", i);  
-//            map.put("neirong", "内容"+i);  
-//            list.add(map);  
-//        }  
-//          
-//          
-//        dataMap.put("list", list);  
+        dataMap.put("rourentime", assemleData(exercisePlan.getFlexSingleWeek())); 
+        
+        //患者信息
+        dataMap.put("name", patient.getName());
+        dataMap.put("gender", patient.getGender());
+        dataMap.put("age", patient.getAge());
+        dataMap.put("sickAge", patient.getAge());
+        dataMap.put("height", patient.getHeight());
+        dataMap.put("weight", patient.getWeight());
+        //dataMap.put("patientType", "我没有测试");
+        if (patient.getPatientType() == Patient.ORDINARY_PATIENT) {
+        	dataMap.put("patientType", "普通冠心病患者");
+		}else if (patient.getPatientType() == Patient.PCI_PATIENT) {
+			dataMap.put("patientType", "近期PCI冠心病患者");
+		}else if (patient.getPatientType() == Patient.OLD_PATIENT) {
+			dataMap.put("patientType", "高龄冠心病患者");
+		}
+        
+        //心率
+        dataMap.put("heartRate", noninvasiveCardiac.getHr());
+        
+        //基本分析结果
+        dataMap.put("highRisk", patient.getHighList().toString());
+        dataMap.put("midRisk", patient.getMidList().toString());
+        //dataMap.put("otherRisk", patient.getHighList().toString());
+        
+        //饮食
+        //淀粉
+        if (foodPlan.getStarch().size() == 4) {
+			dataMap.put("dianfen0", (double)foodPlan.getStarch().get(0)/2);
+			dataMap.put("dianfen1", (double)foodPlan.getStarch().get(1)/2);
+			dataMap.put("dianfen2", (double)foodPlan.getStarch().get(2)/2);
+			dataMap.put("dianfen3", (double)foodPlan.getStarch().get(3)/2);
+		}
+        //谷薯
+        if (foodPlan.getGrain().size() == 4) {
+			dataMap.put("gushu0", (double)foodPlan.getGrain().get(0)/2);
+			dataMap.put("gushu1", (double)foodPlan.getGrain().get(1)/2);
+			dataMap.put("gushu2", (double)foodPlan.getGrain().get(2)/2);
+			dataMap.put("gushu3", (double)foodPlan.getGrain().get(3)/2);
+		}
+        //蔬菜
+        if (foodPlan.getVegetable().size() == 4) {
+			dataMap.put("shucai0", (double)foodPlan.getVegetable().get(0)/2);
+			dataMap.put("shucai1", (double)foodPlan.getVegetable().get(1)/2);
+			dataMap.put("shucai2", (double)foodPlan.getVegetable().get(2)/2);
+			dataMap.put("shucai3", (double)foodPlan.getVegetable().get(3)/2);
+		}
+        //水果
+        if (foodPlan.getFruit().size() == 4) {
+			dataMap.put("shuiguo0", (double)foodPlan.getFruit().get(0)/2);
+			dataMap.put("shuiguo1", (double)foodPlan.getFruit().get(1)/2);
+			dataMap.put("shuiguo2", (double)foodPlan.getFruit().get(2)/2);
+			dataMap.put("shuiguo3", (double)foodPlan.getFruit().get(3)/2);
+		}
+        //肉蛋
+        if (foodPlan.getProtein().size() == 4) {
+			dataMap.put("roudan0", (double)foodPlan.getProtein().get(0)/2);
+			dataMap.put("roudan1", (double)foodPlan.getProtein().get(1)/2);
+			dataMap.put("roudan2", (double)foodPlan.getProtein().get(2)/2);
+			dataMap.put("roudan3", (double)foodPlan.getProtein().get(3)/2);
+		}
+        //油脂
+        if (foodPlan.getOil().size() == 4) {
+			dataMap.put("youzhi0", (double)foodPlan.getOil().get(0)/2);
+			dataMap.put("youzhi1", (double)foodPlan.getOil().get(1)/2);
+			dataMap.put("youzhi2", (double)foodPlan.getOil().get(2)/2);
+			dataMap.put("youzhi3", (double)foodPlan.getOil().get(3)/2);
+		}
     }
     
     private String assemleData(List<Double> list){
@@ -201,8 +264,9 @@ public class ProcessEntrance {
         	kSession.setGlobal("highList", highList);
         	kSession.setGlobal("midList", midList);
         	//patient
-        	Patient patient = new Patient();
+        	patient = new Patient();
         	patient.setAge(45);
+        	patient.setSickAge(43);
         	patient.setName("王婷婷");
         	patient.setGender("女");
         	patient.setBmi(8.32);
@@ -211,14 +275,14 @@ public class ProcessEntrance {
         	patient.setHeight(170);
         	patient.setWeight(70);
         	//Assessment
-        	Assessment assessment = new Assessment();
+        	assessment = new Assessment();
         	assessment.setSasScore(80);
         	assessment.setSdsScore(44);
         	assessment.setMnaScore(13);
         	assessment.setFrailScore(0);
         	assessment.setFallRiskScore(5);
         	assessment.setGdsScore(4);
-        	assessment.setNyha(1);
+        	assessment.setNyha(2);
         	assessment.setCcs(1);
         	assessment.setMrc(0);
         	assessment.setMmseScore(29);
@@ -226,23 +290,24 @@ public class ProcessEntrance {
         	assessment.setIadlScore(15);
         	assessment.setRm(8);
         	//other test
-        	OtherTest otherTest = new OtherTest();
+        	otherTest = new OtherTest();
         	otherTest.setIsArrhythmia(OtherTest.NO_OCCER);
         	otherTest.setAngina(OtherTest.NO_OCCER);
         	otherTest.setIschemia(OtherTest.NO_OCCER);
         	otherTest.setExerciseEquival(6.0);
         	otherTest.setCtni(0.11);
+        	otherTest.setWorkRank(OtherTest.STRONG_WORK);
         	//accessProblem
-        	AccessProblem accessProblem = new AccessProblem();
+        	accessProblem = new AccessProblem();
         	accessProblem.setShock(AccessProblem.NO_OCCER);
         	accessProblem.setVascularObstruction(AccessProblem.NO_OCCER);
 //        	accessProblem.setShock(AccessProblem.OCCER);
         	//无创心功能
-        	NoninvasiveCardiac noninvasiveCardiac = new NoninvasiveCardiac();
+        	noninvasiveCardiac = new NoninvasiveCardiac();
         	noninvasiveCardiac.setEf(58.3);
         	noninvasiveCardiac.setHr(110);
         	//运动心肺
-        	ExerciseCardiopulmonary exerciseCardiopulmonary = new ExerciseCardiopulmonary();
+        	exerciseCardiopulmonary = new ExerciseCardiopulmonary();
         	//exerciseCardiopulmonary.setPeaceRate(104);
         	exerciseCardiopulmonary.setPeakRate(122);
         	exerciseCardiopulmonary.setVo2Max(23.6);
@@ -252,6 +317,12 @@ public class ProcessEntrance {
         	//exerciseCardiopulmonary.setTargetRate(targetRate);
         	//运动方案
         	exercisePlan = new ExercisePlan();
+        	//饮食方案
+        	foodPlan = new FoodPlan();
+        	//结论
+        	conclusion = new Conclusion();
+        	kSession.insert(foodPlan);
+        	kSession.insert(conclusion);
         	kSession.insert(exercisePlan);
         	kSession.insert(exerciseCardiopulmonary);
         	kSession.insert(noninvasiveCardiac);
