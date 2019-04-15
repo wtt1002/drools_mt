@@ -123,10 +123,10 @@ public class ProcessEntrance {
 	 * 数据封装
 	 * @param dataMap
 	 */
-    private void getData(Map<String, Object> dataMap) { 
+    private void getData(Map<String, Object> dataMap) {
     	System.out.println(exercisePlan.getOxyStrength().toString());
         if (exercisePlan.getStrenghVo2() > 0) {
-        	dataMap.put("youyangstrength", "运动摄氧量为"+exercisePlan.getStrenghVo2()+"vo2/kg");
+        	dataMap.put("youyangstrength", "运动摄氧量为"+String.format("%.2f", exercisePlan.getStrenghVo2())+"vo2/kg");
 		}else if (exercisePlan.getOxyStrength().size() > 1) {
 			dataMap.put("youyangstrength", "运动心率控制在"+assemleData(exercisePlan.getOxyStrength()) + "bpm之间");
 		}else if (exercisePlan.getStrength() > 0) {
@@ -175,6 +175,7 @@ public class ProcessEntrance {
         	dataMap.put("patientType", "普通冠心病患者");
 		}else if (patient.getPatientType() == Patient.PCI_PATIENT) {
 			dataMap.put("patientType", "近期PCI冠心病患者");
+			dataMap.put("otherInfo", "近期进行急诊PCI的冠心病患者，进行阻抗训练的时机应在PCI手术三周之后，且应在连续2周有医学监护的有氧训练之后。");
 		}else if (patient.getPatientType() == Patient.OLD_PATIENT) {
 			dataMap.put("patientType", "高龄冠心病患者");
 		}else {
