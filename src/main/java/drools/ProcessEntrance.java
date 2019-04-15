@@ -124,11 +124,15 @@ public class ProcessEntrance {
 	 * @param dataMap
 	 */
     private void getData(Map<String, Object> dataMap) { 
-        if (exercisePlan.getStrenghVo2() != -1) {
-        	dataMap.put("youyangstrength", "运动强度为"+exercisePlan.getStrenghVo2()+"vo2/kg");
-		}
-        if (exercisePlan.getOxyStrength().size() > 0) {
-			dataMap.put("youyangstrength", "运动心率控制在"+assemleData(exercisePlan.getOxyStrength()) + "之间");
+    	System.out.println(exercisePlan.getOxyStrength().toString());
+        if (exercisePlan.getStrenghVo2() > 0) {
+        	dataMap.put("youyangstrength", "运动摄氧量为"+exercisePlan.getStrenghVo2()+"vo2/kg");
+		}else if (exercisePlan.getOxyStrength().size() > 1) {
+			dataMap.put("youyangstrength", "运动心率控制在"+assemleData(exercisePlan.getOxyStrength()) + "bpm之间");
+		}else if (exercisePlan.getStrength() > 0) {
+			dataMap.put("youyangstrength", "运动心率控制在"+exercisePlan.getStrength() + "bpm左右");
+		}else {
+			dataMap.put("youyangstrength", "运动心率控制在比静息心率高20~30bpm");
 		}
         //劳累程度
         dataMap.put("oxyrpe", assemleData(exercisePlan.getOxyRpe()));
@@ -163,7 +167,7 @@ public class ProcessEntrance {
         dataMap.put("name", patient.getName());
         dataMap.put("gender", patient.getGender());
         dataMap.put("age", patient.getAge());
-        dataMap.put("sickAge", patient.getAge());
+        dataMap.put("sickAge", patient.getSickAge());
         dataMap.put("height", patient.getHeight());
         dataMap.put("weight", patient.getWeight());
         //dataMap.put("patientType", "我没有测试");
@@ -173,6 +177,8 @@ public class ProcessEntrance {
 			dataMap.put("patientType", "近期PCI冠心病患者");
 		}else if (patient.getPatientType() == Patient.OLD_PATIENT) {
 			dataMap.put("patientType", "高龄冠心病患者");
+		}else {
+			dataMap.put("patientType", "未定");
 		}
         
         //心率
@@ -227,19 +233,23 @@ public class ProcessEntrance {
 			dataMap.put("youzhi3", (double)foodPlan.getOil().get(3)/2);
 		}
     }
-    
+    /**
+     * 范围数据整理
+     * @param list
+     * @return
+     */
     private String assemleData(List<Double> list){
         if (list != null && list.size() > 1) {
         	if (Math.abs(list.get(0) - list.get(1)) < 0.00001) {
         		if (list.get(0) - list.get(0).intValue() > 0.1) {
-        			return ""+list.get(0);
+        			return String.format("%.2f", list.get(0));
 				}else {
 					return ""+list.get(0).intValue();
 				}
         		
 			}else {
         		if (list.get(0) - list.get(0).intValue() > 0.1 || list.get(1) - list.get(1).intValue() > 0.1) {
-        			return list.get(0)+ "~" + list.get(1);
+        			return String.format("%.2f", list.get(0))+ "~" + String.format("%.2f", list.get(1));
 				}else {
 					return list.get(0).intValue()+ "~" + list.get(1).intValue();
 				}
@@ -258,69 +268,6 @@ public class ProcessEntrance {
     	    KieContainer kContainer = ks.getKieClasspathContainer();
         	KieSession kSession = kContainer.newKieSession("ksession-rules");
         	
-        	//test demo
-        	List<String> highList = new ArrayList<>();
-        	List<String> midList = new ArrayList<>();
-        	kSession.setGlobal("highList", highList);
-        	kSession.setGlobal("midList", midList);
-        	//patient
-        	patient = new Patient();
-        	patient.setAge(45);
-        	patient.setSickAge(43);
-        	patient.setName("王婷婷");
-        	patient.setGender("女");
-        	patient.setBmi(8.32);
-        	patient.setPci(Patient.HAS_PCI);
-        	patient.setPciType(Patient.ELECTIVE_PCI);
-        	patient.setHeight(170);
-        	patient.setWeight(70);
-        	//Assessment
-        	assessment = new Assessment();
-        	assessment.setSasScore(80);
-        	assessment.setSdsScore(44);
-        	assessment.setMnaScore(13);
-        	assessment.setFrailScore(0);
-        	assessment.setFallRiskScore(5);
-        	assessment.setGdsScore(4);
-        	assessment.setNyha(2);
-        	assessment.setCcs(1);
-        	assessment.setMrc(0);
-        	assessment.setMmseScore(29);
-        	assessment.setAdlScore(95);
-        	assessment.setIadlScore(15);
-        	assessment.setRm(8);
-        	//other test
-        	otherTest = new OtherTest();
-        	otherTest.setIsArrhythmia(OtherTest.NO_OCCER);
-        	otherTest.setAngina(OtherTest.NO_OCCER);
-        	otherTest.setIschemia(OtherTest.NO_OCCER);
-        	otherTest.setExerciseEquival(6.0);
-        	otherTest.setCtni(0.11);
-        	otherTest.setWorkRank(OtherTest.STRONG_WORK);
-        	//accessProblem
-        	accessProblem = new AccessProblem();
-        	accessProblem.setShock(AccessProblem.NO_OCCER);
-        	accessProblem.setVascularObstruction(AccessProblem.NO_OCCER);
-//        	accessProblem.setShock(AccessProblem.OCCER);
-        	//无创心功能
-        	noninvasiveCardiac = new NoninvasiveCardiac();
-        	noninvasiveCardiac.setEf(58.3);
-        	noninvasiveCardiac.setHr(110);
-        	//运动心肺
-        	exerciseCardiopulmonary = new ExerciseCardiopulmonary();
-        	//exerciseCardiopulmonary.setPeaceRate(104);
-        	exerciseCardiopulmonary.setPeakRate(122);
-        	exerciseCardiopulmonary.setVo2Max(23.6);
-        	exerciseCardiopulmonary.setEfv1Rate(87);
-        	exerciseCardiopulmonary.setAt(18);
-        	//exerciseCardiopulmonary.setPeakVo2(22.2);
-        	//exerciseCardiopulmonary.setTargetRate(targetRate);
-        	//运动方案
-        	exercisePlan = new ExercisePlan();
-        	//饮食方案
-        	foodPlan = new FoodPlan();
-        	//结论
-        	conclusion = new Conclusion();
         	kSession.insert(foodPlan);
         	kSession.insert(conclusion);
         	kSession.insert(exercisePlan);
@@ -330,34 +277,135 @@ public class ProcessEntrance {
         	kSession.insert(otherTest);
         	kSession.insert(assessment);
             kSession.insert(patient);
+            
             int i = kSession.fireAllRules();
        
-            List<String> highArr = patient.getHighList();
-            System.out.println(highArr.size()+ "条数据");
-            if (highArr.size() > 0) {
-				patient.setRiskRank(Patient.HIGHRISK);
-				for(int k = 0; k < highArr.size(); k++){
-					System.out.println("==="+highArr.get(k));
-				}
-			}
-            
-            List<String> midArr = patient.getMidList();
-            System.out.println(midArr.size()+ "条数据");
-            if (midArr.size() > 0) {
-				patient.setRiskRank(Patient.HIGHRISK);
-				for(int k = 0; k < midArr.size(); k++){
-					System.out.println("==="+midArr.get(k));
-				}
-			}
             System.out.println(exercisePlan.toString());
-            
-//            int j = kSession.fireAllRules();
-//            System.out.println(i+"....."+ j);
             
 		} catch (Exception e) {
 			// TODO: handle exception
 			 e.printStackTrace();
 		}
 	}
-
+	/**
+	 * @return the configuration
+	 */
+	public Configuration getConfiguration() {
+		return configuration;
+	}
+	/**
+	 * @param configuration the configuration to set
+	 */
+	public void setConfiguration(Configuration configuration) {
+		this.configuration = configuration;
+	}
+	/**
+	 * @return the exercisePlan
+	 */
+	public ExercisePlan getExercisePlan() {
+		return exercisePlan;
+	}
+	/**
+	 * @param exercisePlan the exercisePlan to set
+	 */
+	public void setExercisePlan(ExercisePlan exercisePlan) {
+		this.exercisePlan = exercisePlan;
+	}
+	/**
+	 * @return the patient
+	 */
+	public Patient getPatient() {
+		return patient;
+	}
+	/**
+	 * @param patient the patient to set
+	 */
+	public void setPatient(Patient patient) {
+		this.patient = patient;
+	}
+	/**
+	 * @return the noninvasiveCardiac
+	 */
+	public NoninvasiveCardiac getNoninvasiveCardiac() {
+		return noninvasiveCardiac;
+	}
+	/**
+	 * @param noninvasiveCardiac the noninvasiveCardiac to set
+	 */
+	public void setNoninvasiveCardiac(NoninvasiveCardiac noninvasiveCardiac) {
+		this.noninvasiveCardiac = noninvasiveCardiac;
+	}
+	/**
+	 * @return the foodPlan
+	 */
+	public FoodPlan getFoodPlan() {
+		return foodPlan;
+	}
+	/**
+	 * @param foodPlan the foodPlan to set
+	 */
+	public void setFoodPlan(FoodPlan foodPlan) {
+		this.foodPlan = foodPlan;
+	}
+	/**
+	 * @return the accessProblem
+	 */
+	public AccessProblem getAccessProblem() {
+		return accessProblem;
+	}
+	/**
+	 * @param accessProblem the accessProblem to set
+	 */
+	public void setAccessProblem(AccessProblem accessProblem) {
+		this.accessProblem = accessProblem;
+	}
+	/**
+	 * @return the assessment
+	 */
+	public Assessment getAssessment() {
+		return assessment;
+	}
+	/**
+	 * @param assessment the assessment to set
+	 */
+	public void setAssessment(Assessment assessment) {
+		this.assessment = assessment;
+	}
+	/**
+	 * @return the otherTest
+	 */
+	public OtherTest getOtherTest() {
+		return otherTest;
+	}
+	/**
+	 * @param otherTest the otherTest to set
+	 */
+	public void setOtherTest(OtherTest otherTest) {
+		this.otherTest = otherTest;
+	}
+	/**
+	 * @return the exerciseCardiopulmonary
+	 */
+	public ExerciseCardiopulmonary getExerciseCardiopulmonary() {
+		return exerciseCardiopulmonary;
+	}
+	/**
+	 * @param exerciseCardiopulmonary the exerciseCardiopulmonary to set
+	 */
+	public void setExerciseCardiopulmonary(ExerciseCardiopulmonary exerciseCardiopulmonary) {
+		this.exerciseCardiopulmonary = exerciseCardiopulmonary;
+	}
+	/**
+	 * @return the conclusion
+	 */
+	public Conclusion getConclusion() {
+		return conclusion;
+	}
+	/**
+	 * @param conclusion the conclusion to set
+	 */
+	public void setConclusion(Conclusion conclusion) {
+		this.conclusion = conclusion;
+	}
+	
 }
