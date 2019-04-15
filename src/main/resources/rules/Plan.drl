@@ -524,7 +524,7 @@ rule "impedanceGroup1-hml"
 	when
 		$assessment : Assessment(rm >= 0)
 		and
-		Patient(patientType == Patient.ORDINARY_PATIENT && riskRank == Patient.HIGHRISK)
+		Patient(patientType == Patient.ORDINARY_PATIENT)
 		and
 		$exercisePlan : ExercisePlan()
 	then
@@ -551,7 +551,7 @@ rule "impedanceGroup2-h"
 	when
 		$assessment : Assessment(rm >= 0)
 		and
-		Patient(patientType == Patient.ORDINARY_PATIENT && riskRank == Patient.HIGHRISK)
+		Patient(patientType == Patient.OLD_PATIENT && riskRank == Patient.HIGHRISK)
 		and
 		$exercisePlan : ExercisePlan()
 	then
@@ -577,7 +577,7 @@ rule "impedanceGroup2-m"
 	when
 		$assessment : Assessment(rm >= 0)
 		and
-		Patient(patientType == Patient.ORDINARY_PATIENT && riskRank == Patient.HIGHRISK)
+		Patient(patientType == Patient.OLD_PATIENT && riskRank == Patient.MIDRISK)
 		and
 		$exercisePlan : ExercisePlan()
 	then
@@ -603,7 +603,7 @@ rule "impedanceGroup2-l"
 	when
 		$assessment : Assessment(rm >= 0)
 		and
-		Patient(patientType == Patient.ORDINARY_PATIENT && riskRank == Patient.HIGHRISK)
+		Patient(patientType == Patient.OLD_PATIENT && riskRank == Patient.LOWRISK)
 		and
 		$exercisePlan : ExercisePlan()
 	then
@@ -622,7 +622,7 @@ rule "impedanceGroup2-l"
 		$exercisePlan.getImSingleWeek().add(3.0);
 		System.out.println("6...阻抗训练量和频率=================================");
 end
-//  5.2-------------------------PCI冠心病患者-------------------------5.3
+//  5.3-------------------------PCI冠心病患者-------------------------5.3
 rule "impedanceGroup3-hml"
 	activation-group "impedanceGroup"
 	salience 0

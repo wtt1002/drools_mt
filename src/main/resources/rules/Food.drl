@@ -1,0 +1,422 @@
+package com.sample
+ 
+import com.sample.DroolsTest.Message;
+import entity.Patient;
+import entity.Conclusion;
+import entity.OtherTest;
+import entity.FoodPlan;
+global java.util.List myInfo;
+
+rule "fit"
+	activation-group "fat"
+	salience 6
+    when
+        $patient : Patient(weight <= (height - 105)*1.1 && weight >= (height - 105)*0.9)
+        and
+        $conclusion : Conclusion(fitStatus == -1)
+    then
+        System.out.println( "体重正常" );
+        $conclusion.setFitStatus(Conclusion.FIT);
+        update($conclusion);
+        //$patient.set
+        //update($patient);
+end
+
+rule "fat-little"
+	activation-group "fat"
+	salience 6
+    when
+        $patient : Patient(weight <= (height - 105)*1.2 && weight > (height - 105)*1.1)
+        and
+        $conclusion : Conclusion(fitStatus == -1)
+    then
+        System.out.println( "体重正常偏高" );
+        $conclusion.setFitStatus(Conclusion.FAT_LITTLE);
+        update($conclusion);
+        //update($patient);
+end
+
+rule "thin-little"
+	activation-group "fat"
+	salience 6
+    when
+        $patient : Patient(weight < (height - 105)*0.9 && weight >= (height - 105)*0.8)
+        and
+        $conclusion : Conclusion(fitStatus == -1)
+    then
+        System.out.println( "体重正常偏低" );
+        $conclusion.setFitStatus(Conclusion.THIN_LITTLE);
+        update($conclusion);
+        //update($patient);
+end
+
+rule "fat-more"
+	activation-group "fat"
+	salience 6
+    when
+        $patient : Patient(weight > (height - 105)*1.2)
+        and
+        $conclusion : Conclusion(fitStatus == -1)
+    then
+        System.out.println( "体重偏重" );
+        $conclusion.setFitStatus(Conclusion.FAT_MORE);
+        update($conclusion);
+        //update($patient);
+end
+
+rule "thin-more"
+	activation-group "fat"
+	salience 6
+    when
+        $patient : Patient(weight < (height - 105)*0.8)
+        and
+        $conclusion : Conclusion(fitStatus == -1)
+    then
+        System.out.println( "体重偏低" );
+        $conclusion.setFitStatus(Conclusion.THIN_MORE);
+        update($conclusion);
+        //update($patient);
+end
+
+/*
+*	事物交换份双倍
+*/
+rule "food-sum-t-s"
+	activation-group "food-sum"
+	salience 6
+    when
+        $conclusion : Conclusion(fitStatus == Conclusion.THIN_MORE)
+        and
+        $otherTest : OtherTest(workRank == OtherTest.STRONG_WORK)
+        and
+        $foodPlan : FoodPlan(foodSum == -1)
+       	and
+       	$patient : Patient()
+    then
+    	$foodPlan.setFoodSum((($patient.getHeight()-105)*45/90)*2);
+        System.out.println( "偏瘦-强体力劳动" + (($patient.getHeight()-105)*45/90)*2);
+        update($foodPlan);
+end
+
+rule "food-sum-t-m"
+	activation-group "food-sum"
+	salience 6
+    when
+        $conclusion : Conclusion(fitStatus == Conclusion.THIN_MORE)
+        and
+        $otherTest : OtherTest(workRank == OtherTest.MEDIUM_WORK)
+        and
+        $foodPlan : FoodPlan(foodSum == -1)
+       	and
+       	$patient : Patient()
+    then
+    	$foodPlan.setFoodSum((($patient.getHeight()-105)*40/90)*2);
+        System.out.println( "偏瘦-中度体力劳动" + (($patient.getHeight()-105)*40/90)*2);
+        update($foodPlan);
+end
+
+rule "food-sum-t-l"
+	activation-group "food-sum"
+	salience 6
+    when
+        $conclusion : Conclusion(fitStatus == Conclusion.THIN_MORE)
+        and
+        $otherTest : OtherTest(workRank == OtherTest.LITTLE_WORK)
+        and
+        $foodPlan : FoodPlan(foodSum == -1)
+       	and
+       	$patient : Patient()
+    then
+    	$foodPlan.setFoodSum((($patient.getHeight()-105)*35/90)*2);
+        System.out.println( "偏瘦-轻体力劳动" + (($patient.getHeight()-105)*35/90)*2);
+        update($foodPlan);
+end
+
+rule "food-sum-t-n"
+	activation-group "food-sum"
+	salience 6
+    when
+        $conclusion : Conclusion(fitStatus == Conclusion.THIN_MORE)
+        and
+        $otherTest : OtherTest(workRank == OtherTest.NO_WORK)
+        and
+        $foodPlan : FoodPlan(foodSum == -1)
+       	and
+       	$patient : Patient()
+    then
+    	$foodPlan.setFoodSum((($patient.getHeight()-105)*25/90)*2);
+        System.out.println( "偏瘦-无劳动" + (($patient.getHeight()-105)*25/90)*2);
+        update($foodPlan);
+end
+
+rule "food-sum-m-s"
+	activation-group "food-sum"
+	salience 6
+    when
+        $conclusion : Conclusion(fitStatus == Conclusion.THIN_LITTLE || fitStatus == Conclusion.FAT_LITTLE || fitStatus == Conclusion.FIT)
+        and
+        $otherTest : OtherTest(workRank == OtherTest.STRONG_WORK)
+        and
+        $foodPlan : FoodPlan(foodSum == -1)
+       	and
+       	$patient : Patient()
+    then
+    	$foodPlan.setFoodSum((($patient.getHeight()-105)*40/90)*2);
+        System.out.println( "中等身材-强体力劳动" + (($patient.getHeight()-105)*40/90)*2);
+        update($foodPlan);
+end
+
+rule "food-sum-m-m"
+	activation-group "food-sum"
+	salience 6
+    when
+        $conclusion : Conclusion(fitStatus == Conclusion.THIN_LITTLE || fitStatus == Conclusion.FAT_LITTLE || fitStatus == Conclusion.FIT)
+        and
+        $otherTest : OtherTest(workRank == OtherTest.MEDIUM_WORK)
+        and
+        $foodPlan : FoodPlan(foodSum == -1)
+       	and
+       	$patient : Patient()
+    then
+    	$foodPlan.setFoodSum((($patient.getHeight()-105)*35/90)*2);
+        System.out.println( "中等身材-中度体力劳动" + (($patient.getHeight()-105)*35/90)*2);
+        update($foodPlan);
+end
+
+rule "food-sum-m-l"
+	activation-group "food-sum"
+	salience 6
+    when
+        $conclusion : Conclusion(fitStatus == Conclusion.THIN_LITTLE || fitStatus == Conclusion.FAT_LITTLE || fitStatus == Conclusion.FIT)
+        and
+        $otherTest : OtherTest(workRank == OtherTest.LITTLE_WORK)
+        and
+        $foodPlan : FoodPlan(foodSum == -1)
+       	and
+       	$patient : Patient()
+    then
+    	$foodPlan.setFoodSum((($patient.getHeight()-105)*25/90)*2);
+        System.out.println( "中等身材-轻体力劳动" + (($patient.getHeight()-105)*25/90)*2);
+        update($foodPlan);
+end
+
+rule "food-sum-m-n"
+	activation-group "food-sum"
+	salience 6
+    when
+        $conclusion : Conclusion(fitStatus == Conclusion.THIN_LITTLE || fitStatus == Conclusion.FAT_LITTLE || fitStatus == Conclusion.FIT)
+        and
+        $otherTest : OtherTest(workRank == OtherTest.NO_WORK)
+        and
+        $foodPlan : FoodPlan(foodSum == -1)
+       	and
+       	$patient : Patient()
+    then
+    	$foodPlan.setFoodSum((($patient.getHeight()-105)*20/90)*2);
+        System.out.println( "中等身材-无劳动" + (($patient.getHeight()-105)*20/90)*2);
+        update($foodPlan);
+end
+
+rule "food-sum-f-s"
+	activation-group "food-sum"
+	salience 6
+    when
+        $conclusion : Conclusion(fitStatus == Conclusion.FAT_MORE)
+        and
+        $otherTest : OtherTest(workRank == OtherTest.STRONG_WORK)
+        and
+        $foodPlan : FoodPlan(foodSum == -1)
+       	and
+       	$patient : Patient()
+    then
+    	$foodPlan.setFoodSum((($patient.getHeight()-105)*35/90)*2);
+        System.out.println( "肥胖-强体力劳动" + (($patient.getHeight()-105)*35/90)*2);
+        update($foodPlan);
+end
+
+rule "food-sum-f-m"
+	activation-group "food-sum"
+	salience 6
+    when
+        $conclusion : Conclusion(fitStatus == Conclusion.FAT_MORE)
+        and
+        $otherTest : OtherTest(workRank == OtherTest.MEDIUM_WORK)
+        and
+        $foodPlan : FoodPlan(foodSum == -1)
+       	and
+       	$patient : Patient()
+    then
+    	$foodPlan.setFoodSum((($patient.getHeight()-105)*30/90)*2);
+        System.out.println( "肥胖-中度体力劳动" + (($patient.getHeight()-105)*30/90)*2);
+        update($foodPlan);
+end
+
+rule "food-sum-f-l"
+	activation-group "food-sum"
+	salience 6
+    when
+        $conclusion : Conclusion(fitStatus == Conclusion.FAT_MORE)
+        and
+        $otherTest : OtherTest(workRank == OtherTest.LITTLE_WORK)
+        and
+        $foodPlan : FoodPlan(foodSum == -1)
+       	and
+       	$patient : Patient()
+    then
+    	$foodPlan.setFoodSum((($patient.getHeight()-105)*20/90)*2);
+        System.out.println( "肥胖-轻体力劳动" + (($patient.getHeight()-105)*20/90)*2);
+        update($foodPlan);
+end
+
+rule "food-sum-f-n"
+	activation-group "food-sum"
+	salience 6
+    when
+        $conclusion : Conclusion(fitStatus == Conclusion.FAT_MORE)
+        and
+        $otherTest : OtherTest(workRank == OtherTest.NO_WORK)
+        and
+        $foodPlan : FoodPlan(foodSum == -1)
+       	and
+       	$patient : Patient()
+    then
+    	$foodPlan.setFoodSum((($patient.getHeight()-105)*15/90)*2);
+        System.out.println( "肥胖-无劳动" + (($patient.getHeight()-105)*15/90)*2);
+        update($foodPlan);
+end
+
+/**
+*	食物分类划分
+*/
+rule "divFoodInFour"
+	salience 5
+	when
+		$foodPlan : FoodPlan(foodSum > 0 && starch.size == 0)
+	then
+		int sum = $foodPlan.getFoodSum();
+		int gushu = sum/2;
+		int youzhi = sum/10;
+		int roudan = sum/5;
+		int guoshu = sum - gushu -youzhi - roudan;
+		//$foodPlan.getStarch().add()
+		System.out.println("事物划分：" + gushu + "-" + youzhi+ "-"  + roudan+ "-"  + guoshu);
+		//谷薯类
+		$foodPlan.getGrain().add(gushu/4);
+		$foodPlan.getStarch().add(gushu-gushu/4);
+		//果蔬类
+		$foodPlan.getFruit().add(guoshu*2/5);
+		$foodPlan.getVegetable().add(guoshu - guoshu*2/5);
+		//肉蛋类
+		$foodPlan.getProtein().add(roudan);
+		//油脂类
+		$foodPlan.getOil().add(youzhi);
+		update($foodPlan);
+end
+
+/*
+*	淀粉划分
+*/
+rule "divStarch"
+	salience 4
+	when
+		$foodPlan : FoodPlan(starch.size == 1)
+	then
+		int total = $foodPlan.getStarch().get(0);
+		int breakfast = total/4;
+		int dinner = total/3;
+		int lunch = total - breakfast - dinner;
+		$foodPlan.getStarch().add(breakfast);
+		$foodPlan.getStarch().add(lunch);
+		$foodPlan.getStarch().add(total/3);
+		System.out.println("早餐淀粉："+ breakfast + "-" + lunch + "-" + dinner);
+end
+
+/*
+*	粗粮划分
+*/
+rule "divGrain"
+	salience 4
+	when
+		$foodPlan : FoodPlan(grain.size == 1)
+	then
+		int total = $foodPlan.getGrain().get(0);
+		int breakfast = 0;
+		int dinner = total/2;
+		int lunch = total - breakfast - dinner;
+		$foodPlan.getGrain().add(breakfast);
+		$foodPlan.getGrain().add(lunch);
+		$foodPlan.getGrain().add(total/3);
+		System.out.println("早餐粗粮："+ breakfast + "-" + lunch + "-" + dinner);
+end
+
+/*
+*	蔬菜划分
+*/
+rule "divVegetable"
+	salience 4
+	when
+		$foodPlan : FoodPlan(vegetable.size == 1)
+	then
+		int total = $foodPlan.getVegetable().get(0);
+		int breakfast = total/5;
+		int dinner = total*2/5;
+		int lunch = total - breakfast - dinner;
+		$foodPlan.getVegetable().add(breakfast);
+		$foodPlan.getVegetable().add(lunch);
+		$foodPlan.getVegetable().add(total/3);
+		System.out.println("早餐蔬菜："+ breakfast + "-" + lunch + "-" + dinner);
+end
+
+/*
+*	水果划分
+*/
+rule "divFruit"
+	salience 4
+	when
+		$foodPlan : FoodPlan(fruit.size == 1)
+	then
+		int total = $foodPlan.getFruit().get(0);
+		int breakfast = 0;
+		int dinner = total/3;
+		int lunch = total - breakfast - dinner;
+		$foodPlan.getFruit().add(breakfast);
+		$foodPlan.getFruit().add(lunch);
+		$foodPlan.getFruit().add(total/3);
+		System.out.println("早餐水果："+ breakfast + "-" + lunch + "-" + dinner);
+end
+
+/*
+*	肉蛋划分
+*/
+rule "divProtein"
+	salience 4
+	when
+		$foodPlan : FoodPlan(protein.size == 1)
+	then
+		int total = $foodPlan.getProtein().get(0);
+		int breakfast = total/6;
+		int dinner = total/3;
+		int lunch = total - breakfast - dinner;
+		$foodPlan.getProtein().add(breakfast);
+		$foodPlan.getProtein().add(lunch);
+		$foodPlan.getProtein().add(total/3);
+		System.out.println("早餐肉蛋："+ breakfast + "-" + lunch + "-" + dinner);
+end
+
+/*
+*	油脂划分
+*/
+rule "divOil"
+	salience 4
+	when
+		$foodPlan : FoodPlan(oil.size == 1)
+	then
+		int total = $foodPlan.getOil().get(0);
+		int breakfast = total/4;
+		int dinner = total/4;
+		int lunch = total - breakfast - dinner;
+		$foodPlan.getOil().add(breakfast);
+		$foodPlan.getOil().add(lunch);
+		$foodPlan.getOil().add(total/3);
+		System.out.println("早餐油脂："+ breakfast + "-" + lunch + "-" + dinner);
+end
