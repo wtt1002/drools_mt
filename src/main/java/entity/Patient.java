@@ -45,6 +45,7 @@ public class Patient {
 	public static final int ELECTIVE_PCI = 2;
 	private String name;
 	private int age;
+	private int sickAge;
 	private String gender;
 	private int height;
 	private int weight;
@@ -79,6 +80,19 @@ public class Patient {
 	 */
 	public void setAge(int age) {
 		this.age = age;
+	}
+	
+	/**
+	 * @return the sickAge
+	 */
+	public int getSickAge() {
+		return sickAge;
+	}
+	/**
+	 * @param sickAge the sickAge to set
+	 */
+	public void setSickAge(int sickAge) {
+		this.sickAge = sickAge;
 	}
 	/**
 	 * @return the gender

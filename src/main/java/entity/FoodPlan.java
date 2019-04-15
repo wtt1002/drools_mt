@@ -28,17 +28,118 @@ import java.util.List;
 
 */
 public class FoodPlan {
-	private int foodSum;
+	private int foodSum = -1;
 	//µÌ∑€
-	private List<Double> starch = new ArrayList<>();
+	private List<Integer> starch = new ArrayList<>();
 	//π» Ì
-	private List<Double> grain = new ArrayList<>();
+	private List<Integer> grain = new ArrayList<>();
 	// ﬂ≤À
-	private List<Double> vegetable =  new ArrayList<>();
+	private List<Integer> vegetable =  new ArrayList<>();
 	//ÀÆπ˚
-	private List<Double> fruit = new ArrayList<>();
+	private List<Integer> fruit = new ArrayList<>();
+	//»‚µ∞
+	private List<Integer> protein = new ArrayList<>();
 	//”Õ÷¨
-	private List<Double> oil = new ArrayList<>();
+	private List<Integer> oil = new ArrayList<>();
 	//’Ô∂œ
 	private List<String> diagnose = new ArrayList<>();
+	/**
+	 * @return the foodSum
+	 */
+	public int getFoodSum() {
+		return foodSum;
+	}
+	/**
+	 * @param foodSum the foodSum to set
+	 */
+	public void setFoodSum(int foodSum) {
+		this.foodSum = foodSum;
+	}
+	/**
+	 * @return the starch
+	 */
+	public List<Integer> getStarch() {
+		return starch;
+	}
+	/**
+	 * @param starch the starch to set
+	 */
+	public void setStarch(List<Integer> starch) {
+		this.starch = starch;
+	}
+	/**
+	 * @return the grain
+	 */
+	public List<Integer> getGrain() {
+		return grain;
+	}
+	/**
+	 * @param grain the grain to set
+	 */
+	public void setGrain(List<Integer> grain) {
+		this.grain = grain;
+	}
+	/**
+	 * @return the vegetable
+	 */
+	public List<Integer> getVegetable() {
+		return vegetable;
+	}
+	/**
+	 * @param vegetable the vegetable to set
+	 */
+	public void setVegetable(List<Integer> vegetable) {
+		this.vegetable = vegetable;
+	}
+	/**
+	 * @return the fruit
+	 */
+	public List<Integer> getFruit() {
+		return fruit;
+	}
+	/**
+	 * @param fruit the fruit to set
+	 */
+	public void setFruit(List<Integer> fruit) {
+		this.fruit = fruit;
+	}
+	/**
+	 * @return the protein
+	 */
+	public List<Integer> getProtein() {
+		return protein;
+	}
+	/**
+	 * @param protein the protein to set
+	 */
+	public void setProtein(List<Integer> protein) {
+		this.protein = protein;
+	}
+	/**
+	 * @return the oil
+	 */
+	public List<Integer> getOil() {
+		return oil;
+	}
+	/**
+	 * @param oil the oil to set
+	 */
+	public void setOil(List<Integer> oil) {
+		this.oil = oil;
+	}
+	/**
+	 * @return the diagnose
+	 */
+	public List<String> getDiagnose() {
+		return diagnose;
+	}
+	/**
+	 * @param diagnose the diagnose to set
+	 */
+	public void setDiagnose(List<String> diagnose) {
+		this.diagnose = diagnose;
+	}
+
+	
+	
 }
