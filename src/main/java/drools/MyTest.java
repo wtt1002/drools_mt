@@ -168,7 +168,7 @@ public class MyTest {
        	patient = new Patient();
     	patient.setAge(74);
     	patient.setSickAge(66);
-    	patient.setName("郑勇拓");
+    	patient.setName("张某");
     	patient.setGender("男");
     	patient.setBmi(8.32);
     	patient.setPci(Patient.NO_PCI);
@@ -240,7 +240,7 @@ public class MyTest {
     	
     	//无创心功能
     	noninvasiveCardiac = new NoninvasiveCardiac();
-    	noninvasiveCardiac.setEf(58.3);
+    	noninvasiveCardiac.setEf(48.3);
     	//心率
     	noninvasiveCardiac.setHr(88);
     	
@@ -266,7 +266,7 @@ public class MyTest {
        	patient = new Patient();
     	patient.setAge(58);
     	patient.setSickAge(58);
-    	patient.setName("刘成龙");
+    	patient.setName("李某");
     	patient.setGender("女");
     	patient.setBmi(8.32);
     	patient.setPci(Patient.NO_PCI);
