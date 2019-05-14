@@ -17,7 +17,7 @@ rule "age"
         update( $patient );
 end
 
-rule "gender"
+rule "pci"
 	activation-group "patient"
 	lock-on-active
 	salience 9
@@ -30,7 +30,7 @@ rule "gender"
         update( $patient );
 end
 
-rule "gender2"
+rule "ordinary"
 	activation-group "patient"
 	lock-on-active
 	salience 8
