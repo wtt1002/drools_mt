@@ -171,7 +171,7 @@ public class MyTest {
     	patient.setName("ÕÅÄ³");
     	patient.setGender("ÄĞ");
     	patient.setBmi(8.32);
-    	patient.setPci(Patient.NO_PCI);
+    	patient.setPci(Patient.HAS_PCI);
     	patient.setPciType(Patient.URGENT_PCI);
     	patient.setHeight(175);
     	patient.setWeight(60);
